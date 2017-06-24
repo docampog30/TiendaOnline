@@ -1,0 +1,32 @@
+<div class="container">
+      <div class="page-header">
+        <h1>Gestión de productos a publicar</h1>
+      </div>
+      <div class="alert alert-info" role="alert" ng-hide="productos.length > 0">
+        No existen registros.
+     	<button type="button" class="btn btn-primary pull-right" ng-click = "consultarProductos()">Consultar</button>
+      </div>
+      <form class="form-horizontal" role="form">
+      
+      <div class="panel panel-default">
+
+		 <div class="panel-heading">Productos disponibles</div>
+		
+		 <table class="table">
+		  <tr>
+			<th>Descripción </th>
+		    <th>Saldo </th>
+		    <th>Talla </th>
+		    <th>Almacen </th>
+		</tr>
+		  <tr ng-repeat="producto in productos">
+		    <td>{{producto.descripcion}}</td>
+		    <td>{{producto.saldo}}</td>
+		    <td>{{producto.talla}}</td>
+		    <td>{{producto.almacen}}</td>
+		  </tr>
+		</table>
+	</div>
+        <hr />
+      </form>
+    </div>

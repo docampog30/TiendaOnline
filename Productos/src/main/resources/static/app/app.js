@@ -1,5 +1,15 @@
-(function(angular) {
-  angular.module("myApp.controllers", []);
-  angular.module("myApp.services", []);
-  angular.module("myApp", ["ngResource", "myApp.controllers", "myApp.services"]);
-}(angular));
+var controllers = angular.module('myApp.controllers', []);
+var mainApp = angular.module("myApp", ['ngRoute','myApp.controllers','ngResource']);
+
+mainApp.config(['$routeProvider',
+	   function($routeProvider) {
+	      $routeProvider.
+	         when('/home', {
+	            templateUrl: 'consulta.html',
+	            controller: 'ConsultaController'
+	         }).
+	         otherwise({
+	            redirectTo: '/home'
+	         });
+
+	   }]);

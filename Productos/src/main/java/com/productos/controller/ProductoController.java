@@ -1,14 +1,26 @@
 package com.productos.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.productos.model.Producto;
+import com.productos.services.ProductoService;
+
 @RestController
-public class ItemController {
+@RequestMapping("productos")
+public class ProductoController {
 	
-	@RequestMapping("/")
-	public String findItems() {
-		return "HEllo world";
+	@Autowired
+	private ProductoService productoService;
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public List<Producto> buscarProductos() {
+		return productoService.consultarProductos();
 	}
   
   
