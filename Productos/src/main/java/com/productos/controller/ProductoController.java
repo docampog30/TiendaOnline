@@ -23,6 +23,10 @@ public class ProductoController {
 		return productoService.consultarProductos();
 	}
   
+	@RequestMapping(method = RequestMethod.GET)
+	public void publicar() {
+		
+	}
   
 //  @RequestMapping(method = RequestMethod.GET)
 //  public List<Item> findItems() {
