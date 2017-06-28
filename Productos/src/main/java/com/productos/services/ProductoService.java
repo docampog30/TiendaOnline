@@ -2,12 +2,13 @@ package com.productos.services;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.productos.common.TemplateRest;
 import com.productos.integracion.mahalo.AuthenticationSoapHeader;
 import com.productos.integracion.mahalo.CreacionProductoMasivo;
@@ -18,13 +19,12 @@ import com.productos.integracion.mahalo.TicketResponse;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
 import com.productos.integracion.mahalo.dto.Select;
-import com.productos.model.Producto;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.productos.model.Pictures;
 import com.productos.model.Producto;
 import com.productos.model.ProductoMercadoLibre;
 import com.productos.model.ResponseValidate;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 @Service
 public class ProductoService {
@@ -102,6 +102,7 @@ public class ProductoService {
 		producto.setTalla(row.getTalla());
 		
 		return producto;
+	}
 		
 	public void publicarProducto(){
 		ProductoMercadoLibre productoMercadoLibre = new ProductoMercadoLibre();
@@ -115,7 +116,7 @@ public class ProductoService {
 		productoMercadoLibre.setCondition("new");
 		productoMercadoLibre.setDescription("Item de test - No Ofertar");
 		
-		List<Pictures> picturesList = new ArrayList<Pictures>(); 
+		List<Pictures> picturesList = new ArrayList<>(); 
 		Pictures pictures = new Pictures();
 		pictures.setSource("http://mla-s2-p.mlstatic.com/968521-MLA20805195516_072016-O.jpg");
 		
