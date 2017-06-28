@@ -2,23 +2,22 @@ package com.productos.services;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import com.productos.integracion.mahalo.AuthenticationSoapHeader;
 import com.productos.integracion.mahalo.CreacionProductoMasivo;
 import com.productos.integracion.mahalo.EncabezadoCreacionProductoMasivo;
-import com.productos.integracion.mahalo.EncabezadoGetSaldosCreadosMasivo;
 import com.productos.integracion.mahalo.ExternalService;
-import com.productos.integracion.mahalo.GetSaldosCreadosMasivo;
 import com.productos.integracion.mahalo.ObjectFactory;
-import com.productos.integracion.mahalo.ResultadoWS;
 import com.productos.integracion.mahalo.TicketResponse;
+import com.productos.integracion.mahalo.dto.Query;
+import com.productos.integracion.mahalo.dto.Row;
+import com.productos.integracion.mahalo.dto.Select;
 import com.productos.model.Producto;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 @Service
 public class ProductoService {
@@ -54,19 +53,45 @@ public class ProductoService {
 		TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoCreacionProductoMasivo(getSaldosCreadosMasivo);
 		String datos = resultadoWS.getResultadoTicket().getDatos();
 		
-		System.err.println(resultadoWS.getResultadoTicket().toString());
-		System.out.println(resultadoWS.getResultadoTicket().toString());
 		
-		Producto producto = new Producto();
-		producto.setAlmacen("Almacen 1");
-		producto.setDescripcion("Descripcion 2");
-		producto.setSaldo(1);
-		producto.setTalla("39");
+		String data = datos.replaceAll("(<row[0-9]{0,4}\\s)", "<row ");
+		data = data.replace("c_almacen","almacen");
+		data = data.replace("c_barra","barra");
+		data = data.replace("d_producto","descripcion");
+		data = data.replace("pr_venta","precio");
+		data = data.replace("c_talla","talla");
+		data = data.replace("d_marca","marca");
 		
-		List<Producto> productos = new ArrayList<>();
-		productos.add(producto);
+		
+		
+		XStream xStream  = new XStream(new StaxDriver());
+		xStream.processAnnotations(Query.class);
+		xStream.processAnnotations(Row.class);
+		xStream.processAnnotations(Select.class);
+		xStream.ignoreUnknownElements();
+		
+		
+		Query query = (Query) xStream.fromXML(data);
+		
+		System.err.println("Tamaño listas :::: "+query.getSelect().getRows().size());
+		
+		
+		List<Producto> productos = query.getSelect().getRows().stream()
+									.map(ProductoService::buildProduct)
+									.collect(Collectors.toList());
+
 		
 		return productos;
+		
+	}
+	
+	public static Producto buildProduct(Row row){
+		
+		Producto producto = new Producto();
+		producto.setDescripcion(row.getDescripcion());
+		producto.setTalla(row.getTalla());
+		
+		return producto;
 		
 	}
 }

@@ -28,6 +28,7 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("com.thoughtworks.xstream:xstream:1.4.9")
 }
 
 task runFinalJar(type: JavaExec) {
