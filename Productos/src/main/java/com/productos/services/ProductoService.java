@@ -1,105 +1,79 @@
 package com.productos.services;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.productos.common.TemplateRest;
-import com.productos.integracion.mahalo.AuthenticationSoapHeader;
-import com.productos.integracion.mahalo.CreacionProductoMasivo;
-import com.productos.integracion.mahalo.EncabezadoCreacionProductoMasivo;
-import com.productos.integracion.mahalo.ExternalService;
-import com.productos.integracion.mahalo.ObjectFactory;
-import com.productos.integracion.mahalo.TicketResponse;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
-import com.productos.integracion.mahalo.dto.Select;
 import com.productos.model.Pictures;
 import com.productos.model.Producto;
 import com.productos.model.ProductoMercadoLibre;
 import com.productos.model.ResponseValidate;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.productos.model.Talla;
 
 @Service
 public class ProductoService {
 	
-	private static URL url = null;
-	
 	@Autowired
 	private TemplateRest templateRest;
 	
-	static{
-		try {
-			url = new URL("http://mobile.saas.com.co/public/WebService/mahalo.wsdl");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-	}
+	@Autowired
+	private IntegracionService integracionService;
 	
 	public List<Producto> consultarProductos(){
 		
-		ObjectFactory factory = new ObjectFactory();
-		
-		CreacionProductoMasivo getSaldosCreadosMasivo = factory.createCreacionProductoMasivo();
-		
-		AuthenticationSoapHeader authenticationSoapHeader = factory.createAuthenticationSoapHeader();
-		authenticationSoapHeader.setUser("sgc01511");
-		authenticationSoapHeader.setPassword("ver#c015");
-			
-		EncabezadoCreacionProductoMasivo enCreadosMasivo = factory.createEncabezadoCreacionProductoMasivo();
-		enCreadosMasivo.setFechaDesde("01/01/2017");
-		enCreadosMasivo.setFechaHasta("23/06/2017");
-		
-		getSaldosCreadosMasivo.setAuthentication(authenticationSoapHeader);
-		getSaldosCreadosMasivo.setEncabezadoCreacionProductoMasivo(enCreadosMasivo);
-		
-		ExternalService service = new ExternalService(url);
-		TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoCreacionProductoMasivo(getSaldosCreadosMasivo);
-		String datos = resultadoWS.getResultadoTicket().getDatos();
-		
-		
-		String data = datos.replaceAll("(<row[0-9]{0,4}\\s)", "<row ");
-		data = data.replace("c_almacen","almacen");
-		data = data.replace("c_barra","barra");
-		data = data.replace("d_producto","descripcion");
-		data = data.replace("pr_venta","precio");
-		data = data.replace("c_talla","talla");
-		data = data.replace("d_marca","marca");
-		
-		
-		
-		XStream xStream  = new XStream(new StaxDriver());
-		xStream.processAnnotations(Query.class);
-		xStream.processAnnotations(Row.class);
-		xStream.processAnnotations(Select.class);
-		xStream.ignoreUnknownElements();
-		
-		
-		Query query = (Query) xStream.fromXML(data);
-		
-		System.err.println("Tamaño listas :::: "+query.getSelect().getRows().size());
-		
+		Query query = integracionService.consultarCreacionProductoMasivo();
 		
 		List<Producto> productos = query.getSelect().getRows().stream()
-									.map(ProductoService::buildProduct)
+									.map(Row::getReferenciaprov)
+									.map(this::buildProduct)
 									.collect(Collectors.toList());
-
-		
 		return productos;
 		
 	}
 	
-	public static Producto buildProduct(Row row){
+	public Producto buildProduct(String referencia){
 		
 		Producto producto = new Producto();
+		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(referencia);
+		
+		List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
+				.filter(Objects::nonNull)
+				.filter(row ->	row.getSaldo() != null &&  row.getTalla() != null && row.getAlmacen() != null)
+				.collect(Collectors.toList());
+		
+		Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
+		Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+		
+		Row row = rows.get(0);
+		
 		producto.setDescripcion(row.getDescripcion());
-		producto.setTalla(row.getTalla());
+		producto.setMarca(row.getMarca());
+		producto.setSexo(row.getCategoria());
+		producto.setLinea(row.getLinea());
+
+		
+		countTotalByTalla.forEach((key,count)->{
+			Talla talla = new Talla(); 
+			talla.setDescripcion(key);
+			talla.setCantidad(count);
+			
+			producto.addTalla(talla);
+		});
+		
+		distinctCompany.forEach(almacen->{
+			producto.addAlmacen(almacen);
+		});
+		
 		
 		return producto;
 	}

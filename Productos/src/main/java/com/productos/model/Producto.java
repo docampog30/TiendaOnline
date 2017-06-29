@@ -1,10 +1,18 @@
 package com.productos.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Producto {
 	private String descripcion;
 	private Integer saldo;
-	private String talla;
-	private String almacen;
+	
+	private List<Talla> tallas;
+	private List<String> almacenes;
+	
+	private String linea;
+	private String sexo;
+	private String marca;
 	
 	public String getDescripcion() {
 		return descripcion;
@@ -18,22 +26,42 @@ public class Producto {
 	public void setSaldo(Integer saldo) {
 		this.saldo = saldo;
 	}
-	public String getTalla() {
-		return talla;
+	public List<Talla> getTallas() {
+		return tallas == null ? new ArrayList<>() : this.tallas;
 	}
-	public void setTalla(String talla) {
-		this.talla = talla;
+	public void setTallas(List<Talla> tallas) {
+		this.tallas = tallas;
 	}
-	public String getAlmacen() {
-		return almacen;
+	public List<String> getAlmacenes() {
+		return almacenes == null ? new ArrayList<>() : this.almacenes;
 	}
-	public void setAlmacen(String almacen) {
-		this.almacen = almacen;
+	public void setAlmacenes(List<String> almacenes) {
+		this.almacenes = almacenes;
 	}
-	@Override
-	public String toString() {
-		return "Productos [descripcion=" + descripcion + ", saldo=" + saldo + ", talla=" + talla + ", almacen="
-				+ almacen + "]";
+	public String getLinea() {
+		return linea;
+	}
+	public void setLinea(String linea) {
+		this.linea = linea;
+	}
+	public String getSexo() {
+		return sexo;
+	}
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+	public String getMarca() {
+		return marca;
+	}
+	public void setMarca(String marca) {
+		this.marca = marca;
 	}
 	
+	public void addTalla(Talla talla){
+		this.getTallas().add(talla);
+	}
+	
+	public void addAlmacen(String almacen){
+		this.getAlmacenes().add(almacen);
+	}
 }

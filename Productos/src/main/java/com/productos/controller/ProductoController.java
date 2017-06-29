@@ -1,6 +1,5 @@
 package com.productos.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class ProductoController {
 		return productoService.consultarProductos();
 	}
   
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.PUT)
 	public void publicar() {
 		
 	}
