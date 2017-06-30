@@ -4,8 +4,8 @@
       </div>
       <div class="alert alert-info" role="alert" ng-hide="productos.length > 0">
         No existen registros.
-     	<button type="button" class="btn btn-primary pull-right" ng-click = "consultarProductos()">Consultar</button>
       </div>
+	 <button type="button" class="btn btn-primary pull-right" ng-click = "consultarProductos()">Consultar</button>
       <form class="form-horizontal" role="form">
       
       <div class="panel panel-default">
@@ -15,18 +15,43 @@
 		 <table class="table">
 		  <tr>
 			<th>Descripción </th>
-		    <th>Saldo </th>
-		    <th>Talla </th>
+		    <th>Linea </th>
+		    <th>Sexo </th>
 		    <th>Marca </th>
 		</tr>
 		  <tr ng-repeat="producto in productos">
 		    <td>{{producto.descripcion}}</td>
-		    <td>{{producto.saldo}}</td>
-		    <td>{{producto.talla}}</td>
+		    <td>{{producto.linea}}</td>
+		    <td>{{producto.sexo}}</td>
 		    <td>{{producto.marca}}</td>
+		    <td>
+		    <button type="button" class="btn btn-info" ng-click = "">Ver almacenes</button>
+		  	</td>
+		  	 <td>	
+		    <button type="button" class="btn btn-info" ng-click = "verTallas(producto)">Ver Tallas</button>
+		  	</td>
 		  </tr>
 		</table>
 	</div>
         <hr />
       </form>
     </div>
+    
+ <script type="text/ng-template" id="stackedModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title-{{name}}">Tallas disponibles</h3>
+        </div>
+        <div class="modal-body" id="modal-body-{{name}}">
+           <table class="table">
+		  <tr>
+			<th>Talla </th>
+		    <th>Cantidad </th>
+
+		</tr>
+		  <tr ng-repeat="talla in tallas">
+		    <td>{{producto.descripcion}}</td>
+		    <td>{{producto.cantidad}}</td>
+		  </tr>
+		</table>
+        </div>
+</script>

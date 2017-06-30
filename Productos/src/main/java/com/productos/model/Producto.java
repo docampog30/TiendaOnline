@@ -6,13 +6,13 @@ import java.util.List;
 public class Producto {
 	private String descripcion;
 	private Integer saldo;
-	
 	private List<Talla> tallas;
 	private List<String> almacenes;
 	
 	private String linea;
 	private String sexo;
 	private String marca;
+	private String referenciaProov;
 	
 	public String getDescripcion() {
 		return descripcion;
@@ -27,13 +27,13 @@ public class Producto {
 		this.saldo = saldo;
 	}
 	public List<Talla> getTallas() {
-		return tallas == null ? new ArrayList<>() : this.tallas;
+		return tallas == null ? new ArrayList<>() : tallas;
 	}
 	public void setTallas(List<Talla> tallas) {
 		this.tallas = tallas;
 	}
 	public List<String> getAlmacenes() {
-		return almacenes == null ? new ArrayList<>() : this.almacenes;
+		return almacenes == null ? new ArrayList<>() :almacenes;
 	}
 	public void setAlmacenes(List<String> almacenes) {
 		this.almacenes = almacenes;
@@ -57,11 +57,16 @@ public class Producto {
 		this.marca = marca;
 	}
 	
-	public void addTalla(Talla talla){
-		this.getTallas().add(talla);
+	public String getReferenciaProov() {
+		return referenciaProov;
 	}
-	
-	public void addAlmacen(String almacen){
-		this.getAlmacenes().add(almacen);
+	public void setReferenciaProov(String referenciaProov) {
+		this.referenciaProov = referenciaProov;
+	}
+	@Override
+	public String toString() {
+		return "Producto [descripcion=" + descripcion + ", saldo=" + saldo + ", tallas=" + tallas + ", almacenes="
+				+ almacenes + ", linea=" + linea + ", sexo=" + sexo + ", marca=" + marca + ", referenciaProov="
+				+ referenciaProov + "]";
 	}
 }

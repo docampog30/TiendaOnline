@@ -4,6 +4,12 @@ public class Talla {
 	private String descripcion;
 	private int cantidad;
 	
+	public Talla(String key, Integer value) {
+		this.descripcion = key;
+		this.cantidad = value;
+	}
+	public Talla() {
+	}
 	public String getDescripcion() {
 		return descripcion;
 	}

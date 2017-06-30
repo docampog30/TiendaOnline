@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.productos.common.TemplateRest;
 import com.productos.integracion.mahalo.dto.Query;
@@ -34,46 +35,46 @@ public class ProductoService {
 		Query query = integracionService.consultarCreacionProductoMasivo();
 		
 		List<Producto> productos = query.getSelect().getRows().stream()
-									.map(Row::getReferenciaprov)
+									.distinct()
 									.map(this::buildProduct)
+									.filter(Objects::nonNull)
 									.collect(Collectors.toList());
 		return productos;
 		
 	}
 	
-	public Producto buildProduct(String referencia){
+	public Producto buildProduct(Row row){
 		
-		Producto producto = new Producto();
-		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(referencia);
+		System.err.println("BuildProduct -> "+ row.toString());
+		
+		Producto producto = null;
+		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(row.getReferenciaprov());
 		
 		List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
 				.filter(Objects::nonNull)
-				.filter(row ->	row.getSaldo() != null &&  row.getTalla() != null && row.getAlmacen() != null)
+				.filter(r ->	r.getSaldo() != null && r.getSaldo() > 0 &&  r.getTalla() != null && r.getAlmacen() != null)
 				.collect(Collectors.toList());
 		
-		Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
-		Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+		if(!rows.isEmpty()){
 		
-		Row row = rows.get(0);
-		
-		producto.setDescripcion(row.getDescripcion());
-		producto.setMarca(row.getMarca());
-		producto.setSexo(row.getCategoria());
-		producto.setLinea(row.getLinea());
-
-		
-		countTotalByTalla.forEach((key,count)->{
-			Talla talla = new Talla(); 
-			talla.setDescripcion(key);
-			talla.setCantidad(count);
+			producto = new Producto();
+			Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
+			Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
 			
-			producto.addTalla(talla);
-		});
-		
-		distinctCompany.forEach(almacen->{
-			producto.addAlmacen(almacen);
-		});
-		
+			
+			producto.setDescripcion(row.getDescripcion());
+			producto.setMarca(row.getMarca());
+			producto.setSexo(row.getCategoria());
+			producto.setLinea(row.getLinea());
+			
+			List<Talla> tallas = countTotalByTalla.entrySet().stream()
+					.map(e -> new Talla(e.getKey(), e.getValue())).collect(Collectors.toList());
+			
+			producto.setTallas(tallas);
+			producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
+			
+			System.err.println(producto.toString());
+		}
 		
 		return producto;
 	}
