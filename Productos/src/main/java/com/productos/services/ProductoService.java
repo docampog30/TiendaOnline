@@ -1,5 +1,10 @@
 package com.productos.services;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import com.productos.common.TemplateRest;
 import com.productos.integracion.mahalo.dto.Query;
@@ -36,9 +40,31 @@ public class ProductoService {
 		
 		List<Producto> productos = query.getSelect().getRows().stream()
 									.distinct()
+									.filter(Objects::nonNull)
 									.map(this::buildProduct)
 									.filter(Objects::nonNull)
 									.collect(Collectors.toList());
+		
+		String file = "languages.txt";
+        System.out.println("Writing to file: " + file);
+        
+        
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file),StandardCharsets.UTF_8)) {
+	        productos.stream().forEach(p-> {
+	      		  try {
+					writer.write(p.getReferenciaProov()+"\r\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	  		});
+        } catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+        
+
+		
+        System.out.println("Finish: " + file);
 		return productos;
 		
 	}
@@ -50,30 +76,32 @@ public class ProductoService {
 		Producto producto = null;
 		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(row.getReferenciaprov());
 		
-		List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
+		if(querySaldoxReferencia != null){
+			List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
 				.filter(Objects::nonNull)
 				.filter(r ->	r.getSaldo() != null && r.getSaldo() > 0 &&  r.getTalla() != null && r.getAlmacen() != null)
 				.collect(Collectors.toList());
 		
-		if(!rows.isEmpty()){
-		
-			producto = new Producto();
-			Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
-			Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+			if(!rows.isEmpty()){
 			
-			
-			producto.setDescripcion(row.getDescripcion());
-			producto.setMarca(row.getMarca());
-			producto.setSexo(row.getCategoria());
-			producto.setLinea(row.getLinea());
-			
-			List<Talla> tallas = countTotalByTalla.entrySet().stream()
-					.map(e -> new Talla(e.getKey(), e.getValue())).collect(Collectors.toList());
-			
-			producto.setTallas(tallas);
-			producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
-			
-			System.err.println(producto.toString());
+				producto = new Producto();
+				Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
+				Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+				
+				
+				producto.setDescripcion(row.getDescripcion());
+				producto.setMarca(row.getMarca());
+				producto.setSexo(row.getCategoria());
+				producto.setLinea(row.getLinea());
+				producto.setReferenciaProov(row.getReferenciaprov());
+				List<Talla> tallas = countTotalByTalla.entrySet().stream()
+						.map(e -> new Talla(e.getKey(), e.getValue())).collect(Collectors.toList());
+				
+				producto.setTallas(tallas);
+				producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
+				
+				System.err.println(producto.toString());
+			}
 		}
 		
 		return producto;

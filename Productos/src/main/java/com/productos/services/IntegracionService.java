@@ -43,24 +43,32 @@ public class IntegracionService {
 	}
 	
 	public Query consultarCreacionProductoMasivo(){
+		String datos = null;
 		CreacionProductoMasivo getSaldosCreadosMasivo = FACTORY.createCreacionProductoMasivo();
 		
 		EncabezadoCreacionProductoMasivo enCreadosMasivo = FACTORY.createEncabezadoCreacionProductoMasivo();
-		enCreadosMasivo.setFechaDesde("01/04/2017");
+		enCreadosMasivo.setFechaDesde("01/04/2012");
 		enCreadosMasivo.setFechaHasta("15/04/2017");
 //		enCreadosMasivo.setFechaHasta(DateUtil.localDateTimeToString(LocalDateTime.now(),DateUtil.DATE_FORMATTER));
 		
 		getSaldosCreadosMasivo.setAuthentication(AUTHENTICATION);
 		getSaldosCreadosMasivo.setEncabezadoCreacionProductoMasivo(enCreadosMasivo);
 		
-		ExternalService service = new ExternalService(url);
-		TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoCreacionProductoMasivo(getSaldosCreadosMasivo);
-		String datos = resultadoWS.getResultadoTicket().getDatos();
+		try {
+			ExternalService service = new ExternalService(url);
+			TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoCreacionProductoMasivo(getSaldosCreadosMasivo);
+			datos = resultadoWS.getResultadoTicket().getDatos();
+		} catch (Exception e) {
+			System.err.println("Error en consultarCreacionProductoMasivo "+e.getMessage());
+		}
+		
 
 		return getQuery(datos);
 	}
 	
 	public Query consultarDetallexReferenciaProovedor(String referencia){
+		
+		String datos = null;
 		SaldoxReferenciaProveedor saldoXReferencia = FACTORY.createSaldoxReferenciaProveedor();
 		
 		EncabezadoSaldoxReferenciaProveedor encabezadoSaldoxReferencia = FACTORY.createEncabezadoSaldoxReferenciaProveedor();
@@ -68,23 +76,35 @@ public class IntegracionService {
 		
 		saldoXReferencia.setAuthentication(AUTHENTICATION);
 		saldoXReferencia.setEncabezadoSaldoxReferenciaProveedor(encabezadoSaldoxReferencia);
-		
-		ExternalService service = new ExternalService(url);
-		TicketResponse resultadoWS = service.getExternalServiceSoap().getSaldoxReferenciaProveedor(saldoXReferencia);
-		String datos = resultadoWS.getResultadoTicket().getDatos();
 
+		try {
+			ExternalService service = new ExternalService(url);
+			TicketResponse resultadoWS = service.getExternalServiceSoap().getSaldoxReferenciaProveedor(saldoXReferencia);
+			datos = resultadoWS.getResultadoTicket().getDatos();
+
+			System.err.println("Ref_: -> "+referencia);
+		} catch (Exception e) {
+			System.err.println("Error en consultarDetallexReferenciaProovedor "+e.getMessage());
+		}
 		return getQuery(datos);
+		
+		
 	}
 
 	private Query getQuery(String datos) {
-		String data = reemplazarCodigosXML(datos);
-		XStream xStream  = new XStream(new StaxDriver());
-		xStream.processAnnotations(Query.class);
-		xStream.processAnnotations(Row.class);
-		xStream.processAnnotations(Select.class);
-		xStream.ignoreUnknownElements();
-
-		Query query = (Query) xStream.fromXML(data);
+		Query query = null;
+		if(datos != null && !datos.isEmpty()){
+			String data = reemplazarCodigosXML(datos);
+			XStream xStream  = new XStream(new StaxDriver());
+			xStream.processAnnotations(Query.class);
+			xStream.processAnnotations(Row.class);
+			xStream.processAnnotations(Select.class);
+			xStream.ignoreUnknownElements();
+	
+			query = (Query) xStream.fromXML(data);
+		}else{
+			System.err.println("Datos nulos o vacios");
+		}
 		return query;
 	}
 

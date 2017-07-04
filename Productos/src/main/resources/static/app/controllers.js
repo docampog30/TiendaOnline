@@ -1,5 +1,5 @@
 controllers
-  .controller('ConsultaController',['$scope','Productos','$uibModal',function($scope,Productos,$uibModal) {
+  .controller('ConsultaController',['$scope','Productos',function($scope,Productos) {
 	  
 	  $scope.consultarProductos = function(){
 		  var entries = Productos.query().$promise.then(function(todo) {
@@ -8,13 +8,4 @@ controllers
 				alert("Error");
 			});
 	  }
-	  
-	  $scope.verTallas = function(producto) {
-		  $modal.open({
-		      templateUrl: 'stackedModal.html',
-		      controller: function($scope) {
-		        $scope.tallas = producto.tallas;  
-		      }
-		    });
-		  };
 }]);
