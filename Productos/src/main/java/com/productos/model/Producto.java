@@ -3,15 +3,33 @@ package com.productos.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+@DynamoDBTable(tableName = "Producto")
 public class Producto {
+	@DynamoDBIgnore
 	private String descripcion;
+	@DynamoDBIgnore
 	private Integer saldo;
+	
+	@DynamoDBIgnore
 	private List<Talla> tallas;
+	@DynamoDBIgnore
 	private List<String> almacenes;
 	
+	@DynamoDBIgnore
 	private String linea;
+	@DynamoDBIgnore
 	private String sexo;
+	@DynamoDBIgnore
 	private String marca;
+	
+	@DynamoDBHashKey(attributeName = "referencia")
+	@NotNull(message = "referencia must not be empty")
 	private String referenciaProov;
 	
 	public String getDescripcion() {

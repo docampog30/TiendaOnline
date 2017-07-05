@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.productos.bd.AmazonBD;
 import com.productos.common.TemplateRest;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
@@ -34,6 +35,11 @@ public class ProductoService {
 	@Autowired
 	private IntegracionService integracionService;
 	
+	@Autowired
+	private  AmazonBD repository;
+	
+	
+	
 	public List<Producto> consultarProductos(){
 		
 		Query query = integracionService.consultarCreacionProductoMasivo();
@@ -51,6 +57,7 @@ public class ProductoService {
         
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file),StandardCharsets.UTF_8)) {
 	        productos.stream().forEach(p-> {
+	        	repository.save(p);
 	      		  try {
 					writer.write(p.getReferenciaProov()+"\r\n");
 				} catch (IOException e) {

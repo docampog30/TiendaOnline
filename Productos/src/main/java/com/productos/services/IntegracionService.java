@@ -47,8 +47,8 @@ public class IntegracionService {
 		CreacionProductoMasivo getSaldosCreadosMasivo = FACTORY.createCreacionProductoMasivo();
 		
 		EncabezadoCreacionProductoMasivo enCreadosMasivo = FACTORY.createEncabezadoCreacionProductoMasivo();
-		enCreadosMasivo.setFechaDesde("01/04/2012");
-		enCreadosMasivo.setFechaHasta("15/04/2017");
+		enCreadosMasivo.setFechaDesde("21/04/2017");
+		enCreadosMasivo.setFechaHasta("04/07/2017");
 //		enCreadosMasivo.setFechaHasta(DateUtil.localDateTimeToString(LocalDateTime.now(),DateUtil.DATE_FORMATTER));
 		
 		getSaldosCreadosMasivo.setAuthentication(AUTHENTICATION);
