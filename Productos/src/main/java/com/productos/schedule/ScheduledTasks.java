@@ -18,8 +18,8 @@ public class ScheduledTasks {
 	private ProductoService productoService;
 
     @Async
-    public void reportCurrentTime() {
+    public void searchProductsProcess() {
     	System.out.println("The time is now "+dateFormat.format(new Date()));
-    	productoService.consultarProductos();
+    	//productoService.guardarProductosProcess();
     }
 }

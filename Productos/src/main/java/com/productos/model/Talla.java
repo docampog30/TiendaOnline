@@ -1,7 +1,15 @@
 package com.productos.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+
+@DynamoDBDocument
 public class Talla {
+	
+	@DynamoDBAttribute
 	private String descripcion;
+	
+	 @DynamoDBAttribute
 	private int cantidad;
 	
 	public Talla(String key, Integer value) {

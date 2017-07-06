@@ -38,14 +38,14 @@ public class Application extends SpringBootServletInitializer implements Command
       executor.setCorePoolSize(2);
       executor.setMaxPoolSize(2);
       executor.setQueueCapacity(500);
-      executor.setThreadNamePrefix("GithubLookup-");
+      executor.setThreadNamePrefix("Thread Products");
       executor.initialize();
       return executor;
   }
 
 	@Override
 	public void run(String... args) throws Exception {
-		services.reportCurrentTime();
+		services.searchProductsProcess();
 		
 	}
 }

@@ -5,13 +5,14 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Producto")
 public class Producto {
-	@DynamoDBIgnore
+	@DynamoDBAttribute
 	private String descripcion;
 	@DynamoDBIgnore
 	private Integer saldo;
@@ -21,11 +22,11 @@ public class Producto {
 	@DynamoDBIgnore
 	private List<String> almacenes;
 	
-	@DynamoDBIgnore
+	@DynamoDBAttribute
 	private String linea;
-	@DynamoDBIgnore
+	@DynamoDBAttribute
 	private String sexo;
-	@DynamoDBIgnore
+	@DynamoDBAttribute
 	private String marca;
 	
 	@DynamoDBHashKey(attributeName = "referencia")

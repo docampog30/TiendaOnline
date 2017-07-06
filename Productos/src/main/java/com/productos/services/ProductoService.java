@@ -40,82 +40,47 @@ public class ProductoService {
 	
 	
 	
-	public List<Producto> consultarProductos(){
+	public void guardarProductosProcess(){
 		
 		Query query = integracionService.consultarCreacionProductoMasivo();
 		
 		System.out.println("# Productos recuperados -> "+query.getSelect().getRows().size());
 		
-		List<Producto> productos = query.getSelect().getRows().stream()
+		query.getSelect().getRows().stream()
 				.distinct()
 				.filter(Objects::nonNull)
-				.map(this::buildProduct)
+				.map(this::buildProducto)
 				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
-		
-		String file = "languages.txt";
-        System.out.println("Writing to file: " + file);
-        
-        
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file),StandardCharsets.UTF_8)) {
-	        productos.stream().forEach(p-> {
-	        	repository.save(p);
-	      		  try {
-					writer.write(p.getReferenciaProov()+"\r\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	  		});
-        } catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-//        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file),StandardCharsets.UTF_8)) {
-//	        productos.stream().forEach(p-> {
-//	      		  try {
-//					
-//					ObjectMapper mapper = new ObjectMapper();
-//					String jsonInString = mapper.writeValueAsString(p);
-//					writer.write(jsonInString+"\r\n");
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//	  		});
-//        } catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-        
-//        List<Producto> productos = null;
-//        try (Stream<String> stream = Files.lines(Paths.get(file))) {
-//
-//        	 
-//        	productos = stream
-//    				.distinct()
-//    				.filter(Objects::nonNull)
-//    				.map(l->{
-//    					Row row = new Row();
-//    					row.setReferenciaprov(l);
-//    					return row;
-//    				})
-//    				.map(this::buildProduct)
-//    				.filter(Objects::nonNull)
-//    				.collect(Collectors.toList());
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//        System.out.println("Finish: " + file);
-		return productos;
-		
+				.forEach(p->{
+					repository.save(p);
+				});
 	}
 	
-	public Producto buildProduct(Row row){
+	public List<Producto> recuperarProductosByLinea(String linea){
+		return repository.selectProductByLinea(linea).stream()
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+	
+	public Producto buildProducto(Row row){
 		
 		System.err.println("BuildProduct -> "+ row.toString());
+
+		Producto producto = new Producto();
+				
+		producto.setDescripcion(row.getDescripcion());
+		producto.setMarca(row.getMarca());
+		producto.setSexo(row.getCategoria());
+		producto.setLinea(row.getLinea());
+		producto.setReferenciaProov(row.getReferenciaprov());				
+		System.err.println(producto.toString());
+			
+		return producto;
+	}
+	
+	public Producto buildSaldoProducto(Producto producto){
 		
-		Producto producto = null;
-		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(row.getReferenciaprov());
+		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(producto.getReferenciaProov());
 		
 		if(querySaldoxReferencia != null){
 			List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
@@ -125,16 +90,9 @@ public class ProductoService {
 		
 			if(!rows.isEmpty()){
 			
-				producto = new Producto();
 				Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
 				Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
 				
-				
-				producto.setDescripcion(row.getDescripcion());
-				producto.setMarca(row.getMarca());
-				producto.setSexo(row.getCategoria());
-				producto.setLinea(row.getLinea());
-				producto.setReferenciaProov(row.getReferenciaprov());
 				List<Talla> tallas = countTotalByTalla.entrySet().stream()
 						.map(e -> new Talla(e.getKey(), e.getValue())).collect(Collectors.toList());
 				
@@ -143,6 +101,8 @@ public class ProductoService {
 				
 				System.err.println(producto.toString());
 			}
+		}else{
+			producto = null;
 		}
 		
 		return producto;

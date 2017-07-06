@@ -1,3 +1,3 @@
 mainApp.factory('Productos', ['$resource', function($resource) {
-	return $resource('/productos/:id');
+	return $resource('/productos/query/:linea');
 }]);

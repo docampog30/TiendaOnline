@@ -3,6 +3,7 @@ package com.productos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +18,9 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public List<Producto> buscarProductos() {
-		return productoService.consultarProductos();
+	@RequestMapping(method = RequestMethod.GET,value="/query/{linea}")
+	public List<Producto> buscarProductos(@PathVariable String linea) {
+		return productoService.recuperarProductosByLinea(linea);
 	}
   
 	@RequestMapping(method = RequestMethod.PUT)

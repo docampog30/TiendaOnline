@@ -8,6 +8,8 @@
 	 <button type="button" class="btn btn-primary pull-right" ng-click = "consultarProductos()">Consultar</button>
       <form class="form-horizontal" role="form">
       
+      <select ng-model = "lineaSelected" ng-options="linea as linea for linea in lineas"></select>
+      
       <div class="panel panel-default">
 
 		 <div class="panel-heading">Productos disponibles</div>
