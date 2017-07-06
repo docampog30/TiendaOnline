@@ -56,8 +56,10 @@ public class IntegracionService {
 		
 		try {
 			ExternalService service = new ExternalService(url);
+			System.out.println("Consultando getInfoCreacionProductoMasivo ::::");
 			TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoCreacionProductoMasivo(getSaldosCreadosMasivo);
 			datos = resultadoWS.getResultadoTicket().getDatos();
+			System.out.println("Termina getInfoCreacionProductoMasivo ::::");
 		} catch (Exception e) {
 			System.err.println("Error en consultarCreacionProductoMasivo "+e.getMessage());
 		}

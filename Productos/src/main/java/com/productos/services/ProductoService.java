@@ -44,12 +44,14 @@ public class ProductoService {
 		
 		Query query = integracionService.consultarCreacionProductoMasivo();
 		
+		System.out.println("# Productos recuperados -> "+query.getSelect().getRows().size());
+		
 		List<Producto> productos = query.getSelect().getRows().stream()
-									.distinct()
-									.filter(Objects::nonNull)
-									.map(this::buildProduct)
-									.filter(Objects::nonNull)
-									.collect(Collectors.toList());
+				.distinct()
+				.filter(Objects::nonNull)
+				.map(this::buildProduct)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 		
 		String file = "languages.txt";
         System.out.println("Writing to file: " + file);
@@ -68,10 +70,42 @@ public class ProductoService {
 			e1.printStackTrace();
 		}
 
+//        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file),StandardCharsets.UTF_8)) {
+//	        productos.stream().forEach(p-> {
+//	      		  try {
+//					
+//					ObjectMapper mapper = new ObjectMapper();
+//					String jsonInString = mapper.writeValueAsString(p);
+//					writer.write(jsonInString+"\r\n");
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//	  		});
+//        } catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
         
-
-		
-        System.out.println("Finish: " + file);
+//        List<Producto> productos = null;
+//        try (Stream<String> stream = Files.lines(Paths.get(file))) {
+//
+//        	 
+//        	productos = stream
+//    				.distinct()
+//    				.filter(Objects::nonNull)
+//    				.map(l->{
+//    					Row row = new Row();
+//    					row.setReferenciaprov(l);
+//    					return row;
+//    				})
+//    				.map(this::buildProduct)
+//    				.filter(Objects::nonNull)
+//    				.collect(Collectors.toList());
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//        System.out.println("Finish: " + file);
 		return productos;
 		
 	}
