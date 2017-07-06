@@ -48,6 +48,7 @@ public class ProductoService {
 		
 		List<Producto> productos = query.getSelect().getRows().stream()
 				.distinct()
+				.limit(5)
 				.filter(Objects::nonNull)
 				.map(this::buildProduct)
 				.filter(Objects::nonNull)
