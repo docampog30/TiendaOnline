@@ -5,7 +5,7 @@
       <div class="alert alert-info" role="alert" ng-hide="productos.length > 0">
         No existen registros.
       </div>
-	 <button type="button" class="btn btn-primary pull-right" ng-click = "consultarProductos()">Consultar</button>
+	 <button type="button" class="btn btn-warning pull-right" ng-click = "consultarProductos()">Consultar</button>
       <form class="form-horizontal" role="form">
       
       <select ng-model = "lineaSelected" ng-options="linea as linea for linea in lineas"></select>
@@ -27,10 +27,13 @@
 		    <td>{{producto.sexo}}</td>
 		    <td>{{producto.marca}}</td>
 		    <td>
-		    <button type="button" class="btn btn-info" ng-click = "">Ver almacenes</button>
+		    <button type="button" class="btn btn-info" ng-click = "openAlmacenes(producto)">Ver almacenes</button>
 		  	</td>
 		  	 <td>	
-		    <button type="button" class="btn btn-info" ng-click = "verTallas(producto)">Ver Tallas</button>
+		    <button type="button" class="btn btn-info" ng-click = "openTallas(producto)">Ver Tallas</button>
+		  	</td>
+		  	 <td>	
+		    <button type="button" class="btn btn-primary" ng-click = "publicar(producto)">Publicar</button>
 		  	</td>
 		  </tr>
 		</table>
@@ -39,7 +42,7 @@
       </form>
     </div>
     
- <script type="text/ng-template" id="stackedModal.html">
+ <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
             <h3 class="modal-title" id="modal-title-{{name}}">Tallas disponibles</h3>
         </div>
@@ -51,9 +54,64 @@
 
 		</tr>
 		  <tr ng-repeat="talla in tallas">
-		    <td>{{producto.descripcion}}</td>
-		    <td>{{producto.cantidad}}</td>
+		    <td>{{talla.descripcion}}</td>
+		    <td>{{talla.cantidad}}</td>
 		  </tr>
 		</table>
+        </div>
+</script>
+
+ <script type="text/ng-template" id="myModalAlmacenes.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Almacenes disponibles</h3>
+        </div>
+        <div class="modal-body">
+           <table class="table">
+		  <tr>
+			<th>Nombre</th>
+		</tr>
+		  <tr ng-repeat="almacen in almacenes">
+		    <td>{{almacen}}</td>
+		  </tr>
+		</table>
+        </div>
+</script>
+
+ <script type="text/ng-template" id="myModalPublicar.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Publicar producto</h3>
+			<h5  class="modal-title">
+        </div>
+        <div class="modal-body">
+             <p>{{producto.descripcion}} - {{producto.marca}} - {{producto.sexo}}</p>
+
+			<ul>
+                <li>
+					<label>Ingresar talla</label>
+				</li>
+				<li>
+					<input ng-model="cantidad" />
+				</li>
+				
+			</ul>
+			<ul>
+				 <li>
+					<label>Ingresar Cantidad x talla</label>
+				</li>
+				<li>
+					<input ng-model="cantidadTalla" />
+				</li>
+			</ul>
+			<ul>
+				<li>
+					<button type="button" class="btn btn-default">Agregar</button>
+				</li>
+            </ul>
+        </div>
+		<div class="modal-footer">
+         <button type="button" class="btn btn-default" ng-click="close()" data-dismiss="modal">Close
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="publicar()">Publicar
+        </button>
         </div>
 </script>
