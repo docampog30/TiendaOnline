@@ -1,8 +1,10 @@
 controllers
-  .controller('ConsultaController',['$scope','Productos',function($scope,Productos) {
+  .controller('ConsultaController',['$scope','Productos','$uibModal',function($scope,Productos, $uibModal) {
 	  
 	  $scope.lineas = ["CALZADO","ROPA","ACCESORIOS"];
-	  $scope.lineaSelected = $scope.lineas[0];	
+	  $scope.lineaSelected = $scope.lineas[0];
+	  $scope.agregar = {};
+	  $scope.productosAgregados = [];
 	  
 	  $scope.consultarProductos = function(){
 		  var entries = Productos.query({ linea: $scope.lineaSelected}).$promise.then(function(todo) {
@@ -36,14 +38,21 @@ controllers
 	  }
 	  
 	  $scope.publicar = function (producto) {
+		  $scope.producto = producto;
+		  $scope.almacenes = producto.almacenes;
 		    var modalInstance = $uibModal.open({
 		      ariaLabelledBy: 'modal-title',
 		      ariaDescribedBy: 'modal-body',
 		      templateUrl: 'myModalPublicar.html',
-		      controller: function($scope) {
-		    	  $scope.producto = producto;
-		        }
+		      size:'lg',
+		      scope:$scope
 		    });
+	  }
+	  
+	  $scope.agregarProducto = function(){
+		  $scope.agregar.nombre = $scope.producto.descripcion;
+		  $scope.agregar.referencia = $scope.producto.referenciaProov;
+		  $scope.productosAgregados.push(angular.copy($scope.agregar));
 	  }
 	  
 	 

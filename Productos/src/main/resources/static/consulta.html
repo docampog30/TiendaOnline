@@ -1,3 +1,4 @@
+ <form class="form-horizontal" role="form">      
 <div class="container">
       <div class="page-header">
         <h1>Gestión de productos a publicar</h1>
@@ -5,11 +6,12 @@
       <div class="alert alert-info" role="alert" ng-hide="productos.length > 0">
         No existen registros.
       </div>
-	 <button type="button" class="btn btn-warning pull-right" ng-click = "consultarProductos()">Consultar</button>
-      <form class="form-horizontal" role="form">
-      
-      <select ng-model = "lineaSelected" ng-options="linea as linea for linea in lineas"></select>
-      
+     
+      <div class="form-inline">
+      	<label class="mr-sm-2 form-control">Linea : </label>
+	    <select class="mb-2 mr-sm-2 mb-sm-0  form-control" ng-model = "lineaSelected" ng-options="linea as linea for linea in lineas"></select>
+	 	<button type="button" class="btn btn-warning" ng-click = "consultarProductos()">Consultar</button>
+      </div>
       <div class="panel panel-default">
 
 		 <div class="panel-heading">Productos disponibles</div>
@@ -39,9 +41,8 @@
 		</table>
 	</div>
         <hr />
-      </form>
     </div>
-    
+    </form>
  <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
             <h3 class="modal-title" id="modal-title-{{name}}">Tallas disponibles</h3>
@@ -79,38 +80,68 @@
 
  <script type="text/ng-template" id="myModalPublicar.html">
         <div class="modal-header">
-            <h3 class="modal-title">Publicar producto</h3>
-			<h5  class="modal-title">
+            <h4 class="modal-title">Publicar producto</h4>
+			<input type="text" class="form-control" ng-model="producto.descripcion" placeholder="Nombre producto">
         </div>
         <div class="modal-body">
-             <p>{{producto.descripcion}} - {{producto.marca}} - {{producto.sexo}}</p>
+			  
+             <p>Marca : {{producto.marca}} Sexo : {{producto.sexo}}</p>
 
-			<ul>
-                <li>
-					<label>Ingresar talla</label>
-				</li>
-				<li>
-					<input ng-model="cantidad" />
-				</li>
-				
-			</ul>
-			<ul>
-				 <li>
-					<label>Ingresar Cantidad x talla</label>
-				</li>
-				<li>
-					<input ng-model="cantidadTalla" />
-				</li>
-			</ul>
-			<ul>
-				<li>
-					<button type="button" class="btn btn-default">Agregar</button>
-				</li>
-            </ul>
+<div class="col-md-6 col-md-offset-1 "> 
+		
+	<div class="form-group row">
+		<label class="col-form-label">Disponible en los almacenes</label>
+		 <table class="table">
+		  <tr ng-repeat="almacen in almacenes">
+		    <td>{{almacen}}</td>
+		  </tr>
+		</table>
+	</div>
+</div>
+<div class = "col-md-3 col-md-offset-2  ">
+
+<div class="form-group row">
+		<label class="col-form-label">Disponible en las tallas</label>
+		 <table class="table">
+		  <tr ng-repeat="almacen in almacenes">
+		    <td>{{almacen}}</td>
+		  </tr>
+		</table>
+	</div>
+	
+</div>
+		<div class="form-group row">
+      		<label class="col-sm-2 col-form-label">Talla</label>
+      		<div class="col-sm-10">
+        		<input type="number" class="form-control" ng-model="agregar.talla" placeholder="# Talla">
+      		</div>
+    	</div>
+		<div class="form-group row">
+      		<label class="col-sm-2 col-form-label">Cantidad x talla</label>
+      		<div class="col-sm-10">
+        		<input type="number" class="form-control" ng-model="agregar.cantidad" placeholder="Cantidad">
+      		</div>
+    	</div>
+	<div class="form-group row">
+        <button type="submit" class="btn btn-warning pull-right" ng-click="agregarProducto()">Agregar</button>
+    </div>
+<div>
+	<label class="col-form-label">Productos listos para publicar</label>
+	 <table class="table">
+		  <tr>
+			<th>Nombre</th>
+			<th>Talla</th>
+			<th>Cantidad</th>
+		</tr>
+		  <tr ng-repeat="prod in productosAgregados track by $index">
+		    <td>{{prod.nombre}}</td>
+			<td>{{prod.talla}}</td>
+			<td>{{prod.cantidad}}</td>
+		  </tr>
+	</table>
+</div>
         </div>
 		<div class="modal-footer">
-         <button type="button" class="btn btn-default" ng-click="close()" data-dismiss="modal">Close
-        </button>
         <button type="button" class="btn btn-primary" ng-click="publicar()">Publicar
         </button>
         </div>
