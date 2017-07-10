@@ -7,6 +7,10 @@ mainApp.config(['$routeProvider',
 	            templateUrl: 'consulta.html',
 	            controller: 'ConsultaController'
 	         }).
+	         when('/publicar', {
+	            templateUrl: 'publicar.html',
+	            controller: 'PublicarController'
+	         }).
 	         otherwise({
 	            redirectTo: '/home'
 	         });
