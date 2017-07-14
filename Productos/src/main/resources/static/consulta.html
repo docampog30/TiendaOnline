@@ -30,10 +30,6 @@
 		    <td>{{producto.marca}}</td>
 		    <td>
 		    <button type="button" class="btn btn-info" ng-click = "openAlmacenes(producto)">Ver almacenes</button>
-		  	</td>
-		  	 <td>	
-		    <button type="button" class="btn btn-info" ng-click = "openTallas(producto)">Ver Tallas</button>
-		  	</td>
 		  	 <td>	
 		    <button type="button" class="btn btn-primary" ng-click = "publicar(producto)">Publicar</button>
 		  	</td>
@@ -43,88 +39,42 @@
         <hr />
     </div>
     </form>
- <script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-            <h3 class="modal-title" id="modal-title-{{name}}">Tallas disponibles</h3>
-        </div>
-        <div class="modal-body" id="modal-body-{{name}}">
-           <table class="table">
-		  <tr>
-			<th>Talla </th>
-		    <th>Cantidad </th>
-
-		</tr>
-		  <tr ng-repeat="talla in tallas">
-		    <td>{{talla.descripcion}}</td>
-		    <td>{{talla.cantidad}}</td>
-		  </tr>
-		</table>
-        </div>
-</script>
-
- <script type="text/ng-template" id="myModalAlmacenes.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Almacenes disponibles</h3>
-        </div>
-        <div class="modal-body">
-           <table class="table">
-		  <tr>
-			<th>Nombre</th>
-		</tr>
-		  <tr ng-repeat="almacen in almacenes">
-		    <td>{{almacen}}</td>
-		  </tr>
-		</table>
-        </div>
-</script>
 
  <script type="text/ng-template" id="myModalPublicar.html">
-        <div class="modal-header">
+   <div class="modal-header">
             <h4 class="modal-title">Publicar producto</h4>
+			<p>Marca : {{producto.marca}} Sexo : {{producto.sexo}}</p>
+		 <div class="col-sm-10">
 			<input type="text" class="form-control" ng-model="producto.descripcion" placeholder="Nombre producto">
+			<span class="glyphicon glyphicon-edit form-control-feedback"></span>	
+          </div>
+
         </div>
-        <div class="modal-body">
-			  
-             <p>Marca : {{producto.marca}} Sexo : {{producto.sexo}}</p>
+<div class="modal-body">
 
-<div class="col-md-6 col-md-offset-1 "> 
-		
-	<div class="form-group row">
-		<label class="col-form-label">Disponible en los almacenes</label>
-		 <table class="table">
-		  <tr ng-repeat="almacen in almacenes">
-		    <td>{{almacen}}</td>
-		  </tr>
-		</table>
-	</div>
-</div>
-<div class = "col-md-3 col-md-offset-2  ">
+ <input type=file name=filename id=file>
+     <button type=button onclick='test()'>Display</button></br>
 
-<div class="form-group row">
-		<label class="col-form-label">Disponible en las tallas</label>
-		 <table class="table">
-		  <tr ng-repeat="almacen in almacenes">
-		    <td>{{almacen}}</td>
-		  </tr>
-		</table>
-	</div>
-	
-</div>
-		<div class="form-group row">
-      		<label class="col-sm-2 col-form-label">Talla</label>
-      		<div class="col-sm-10">
-        		<input type="number" class="form-control" ng-model="agregar.talla" placeholder="# Talla">
-      		</div>
-    	</div>
-		<div class="form-group row">
-      		<label class="col-sm-2 col-form-label">Cantidad x talla</label>
-      		<div class="col-sm-10">
-        		<input type="number" class="form-control" ng-model="agregar.cantidad" placeholder="Cantidad">
-      		</div>
-    	</div>
-	<div class="form-group row">
-        <button type="submit" class="btn btn-warning pull-right" ng-click="agregarProducto()">Agregar</button>
-    </div>
+	 <table class="table">
+		<tr>
+			<td>
+				<label class="col-form-label">Talla</label>
+				<select ng-model = "selectedItem" class="form-control" ng-options="item as item.descripcion for item in producto.tallas"> </select>
+			</td>
+		    <td>
+				<label class="col-form-label">Cantidad x talla</label>
+        		<input type="number" class="form-control" ng-model="agregar.cantidad" placeholder="Ingresar Cantidad Cantidad">
+			</td>
+			 <td>
+				<label class="col-form-label">Precio</label>
+        		<input type="number" class="form-control" ng-model="agregar.precio" placeholder="Ingresar precio">
+			</td>
+			<td>
+				<label class="col-form-label">    </label>
+				  <button type="submit" class="btn btn-warning pull-right" ng-click="agregarProducto()">Agregar</button>
+			</td>
+		</tr>
+	 </table>
 <div>
 	<label class="col-form-label">Productos listos para publicar</label>
 	 <table class="table">
@@ -132,17 +82,60 @@
 			<th>Nombre</th>
 			<th>Talla</th>
 			<th>Cantidad</th>
+			<th>Precio</th>
 		</tr>
 		  <tr ng-repeat="prod in productosAgregados track by $index">
 		    <td>{{prod.nombre}}</td>
 			<td>{{prod.talla}}</td>
 			<td>{{prod.cantidad}}</td>
+			<td>{{prod.precio}}</td>
+			<td><button type="button" class="btn btn btn-danger">Eliminar
+				<span class="glyphicon glyphicon-erase"></span>	
+			</button></td>
 		  </tr>
 	</table>
 </div>
         </div>
 		<div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="publicar()">Publicar
+        <button type="button" class="btn btn-primary btn-xs" ng-click="ok()">Publicar
         </button>
         </div>
 </script>
+
+ <script type="text/ng-template" id="myModalPhotos.html">
+   <div class="modal-header">
+            <h4 class="modal-title">Imagenes del producto</h4>
+    </div>
+<div class="modal-body">
+	{{images}}
+	<fieldset>
+      <legend>Upload on form submit</legend>
+      <br>Photo:
+      <input type="file" ngf-select ng-model="picFile" name="file"    
+             accept="image/*" ngf-max-size="2MB" required
+             ngf-model-invalid="errorFile">
+      <i ng-show="myForm.file.$error.required">*required</i><br>
+      <i ng-show="myForm.file.$error.maxSize">File too large 
+          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+      <img ngf-thumbnail="picFile" class="img-thumbnail"/> 
+	<button ng-click="picFile = null" ng-show="picFile">Remove</button>
+      <br>
+      <button ng-click="uploadPic(picFile)">Submit</button>
+      <span class="progress" ng-show="picFile.progress >= 0">
+        <div style="width:{{picFile.progress}}%" 
+            ng-bind="picFile.progress + '%'"></div>
+      </span>
+      <span ng-show="picFile.result">Upload Successful</span>
+      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+    </fieldset>
+
+</div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-xs" ng-click="ok()">Publicar
+        </button>
+        </div>
+</script>
+
+
+
+    

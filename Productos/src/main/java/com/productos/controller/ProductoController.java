@@ -19,8 +19,13 @@ public class ProductoController {
 	private ProductoService productoService;
 	
 	@RequestMapping(method = RequestMethod.GET,value="/query/{linea}")
-	public List<Producto> buscarProductos(@PathVariable String linea) {
+	public List<Producto> buscarProductosByLinea(@PathVariable String linea) {
 		return productoService.recuperarProductosByLinea(linea);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,value="/find/{ref}")
+	public Producto buscarProductosById(@PathVariable String ref) {
+		return productoService.getDetailsByID(ref);
 	}
   
 	@RequestMapping(method = RequestMethod.PUT)

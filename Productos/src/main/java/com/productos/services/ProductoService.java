@@ -38,8 +38,6 @@ public class ProductoService {
 	@Autowired
 	private  AmazonBD repository;
 	
-	
-	
 	public void guardarProductosProcess(){
 		
 		Query query = integracionService.consultarCreacionProductoMasivo();
@@ -61,6 +59,10 @@ public class ProductoService {
 		return repository.selectProductByLinea(linea).stream()
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
+	}
+	
+	public Producto getDetailsByID(String referencia){
+		return buildSaldoProducto (repository.geyByID(referencia));
 	}
 	
 	public Producto buildProducto(Row row){

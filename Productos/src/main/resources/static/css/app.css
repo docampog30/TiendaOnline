@@ -11,3 +11,12 @@ list-style-type:none;
 border-bottom: 0px solid #CCCCCC;
 
 }
+
+#loading-bar .bar {
+  position: relative;
+}
+
+.thumbnail{
+   float:left;
+    width: 60px;
+ }

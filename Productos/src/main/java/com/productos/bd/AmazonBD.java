@@ -39,8 +39,12 @@ public class AmazonBD {
 		  .withFilterExpression("#linea = :line");
 		  
 		  
-		  
+
 		 return dbMapper.parallelScan(Producto.class,scanExpression,2);
+	}
+	
+	public Producto geyByID(String id){
+		return dbMapper.load(Producto.class, id, new DynamoDBMapperConfig(DynamoDBMapperConfig.ConsistentReads.CONSISTENT)); 
 	}
 
 }
