@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.productos.services.ProductoService;
@@ -19,7 +20,13 @@ public class ScheduledTasks {
 
     @Async
     public void searchProductsProcess() {
-    	System.out.println("The time is now "+dateFormat.format(new Date()));
-    	//productoService.guardarProductosProcess();
+    	System.out.println("Start Guarda Productos "+dateFormat.format(new Date()));
+    	productoService.guardarProductosProcess();
+    	System.out.println("finish guarda Productos "+dateFormat.format(new Date()));
+    }
+    
+    @Scheduled(cron = "0 0 23 * * ?")
+    public void searchProductsEveryDay(){
+    	productoService.guardarProductosDiarios();
     }
 }

@@ -25,7 +25,7 @@ public class Producto {
 	@DynamoDBAttribute
 	private String linea;
 	@DynamoDBAttribute
-	private String sexo;
+	private String genero;
 	@DynamoDBAttribute
 	private String marca;
 	
@@ -63,11 +63,11 @@ public class Producto {
 	public void setLinea(String linea) {
 		this.linea = linea;
 	}
-	public String getSexo() {
-		return sexo;
+	public String getGenero() {
+		return genero;
 	}
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
+	public void setGenero(String genero) {
+		this.genero = genero;
 	}
 	public String getMarca() {
 		return marca;
@@ -85,7 +85,7 @@ public class Producto {
 	@Override
 	public String toString() {
 		return "Producto [descripcion=" + descripcion + ", saldo=" + saldo + ", tallas=" + tallas + ", almacenes="
-				+ almacenes + ", linea=" + linea + ", sexo=" + sexo + ", marca=" + marca + ", referenciaProov="
+				+ almacenes + ", linea=" + linea + ", genero=" + genero + ", marca=" + marca + ", referenciaProov="
 				+ referenciaProov + "]";
 	}
 }

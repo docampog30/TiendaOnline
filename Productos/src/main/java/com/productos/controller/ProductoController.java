@@ -1,5 +1,8 @@
 package com.productos.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,13 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 	
-	@RequestMapping(method = RequestMethod.GET,value="/query/{linea}")
-	public List<Producto> buscarProductosByLinea(@PathVariable String linea) {
-		return productoService.recuperarProductosByLinea(linea);
+	@RequestMapping(method = RequestMethod.GET,value="/find/{linea}/{marca}/{genero}/{desde}/{hasta}/{almacen}")
+	public List<Producto> buscarProductosByLinea(@PathVariable String linea,@PathVariable String marca,@PathVariable String genero,@PathVariable Long desde,@PathVariable Long hasta,@PathVariable String almacen) {
+		
+		LocalDate dateDesde = Instant.ofEpochMilli(desde).atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate dateHasta = Instant.ofEpochMilli(hasta).atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		return productoService.recuperarProductosxFiltro(linea, marca, dateDesde, dateHasta, almacen, genero);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,value="/find/{ref}")

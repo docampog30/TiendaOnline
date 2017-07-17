@@ -2,15 +2,33 @@ controllers
   .controller('ConsultaController',['$scope','Productos','Detalles','$uibModal','Upload',function($scope,Productos,Detalles, $uibModal,Upload) {
 	  
 	  $scope.lineas = ["CALZADO","ROPA","ACCESORIOS"];
+	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
+	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA"];
+	  $scope.tiendas = [{codigo:"3",nombre:'PALACIO'},
+		  				{codigo:"4",nombre:'GIRARDOTA'},
+		  				{codigo:"5",nombre:'SAN DIEGO'},
+		  				{codigo:"8",nombre:'HOLLYWOOD'},
+		  				{codigo:"9",nombre:'MAYORCA'},
+		  				{codigo:"10",nombre:'PUERTA NORTE'},
+		  				{codigo:"11",nombre:'IBAGUE'},
+		  				{codigo:"12",nombre:'MOLINOS'},
+		  				{codigo:"13",nombre:'PREMIUM'},
+		  				{codigo:"14",nombre:'FLORIDA'}];
+	  $scope.search = {};
 	  $scope.lineaSelected = $scope.lineas[0];
 	  $scope.agregar = {};
 	  $scope.productosAgregados = [];
 	  
 	  $scope.consultarProductos = function(){
-		  var entries = Productos.query({ linea: $scope.lineaSelected}).$promise.then(function(todo) {
+		  
+		  var query = angular.copy($scope.search);
+		  query.desde = query.desde.getTime();
+		  query.hasta = query.hasta.getTime();
+		  
+		  var entries = Detalles.query(query).$promise.then(function(todo) {
 			   $scope.productos = todo;
 			}, function(errResponse) {
-				alert("Error");
+				alert("No existe disponibilidad de producto seleccionado");
 			});
 	  }
 	  
@@ -20,9 +38,8 @@ controllers
 		  $scope.agregar = {};
 		  $scope.producto ={};
 		  $scope.selectedItem = {};
-		  
-		  var entries = Detalles.query({ ref: producto.referenciaProov}).$promise.then(function(todo) {
-			  $scope.producto = todo[0];
+
+			  $scope.producto = producto;
 			  $scope.selectedItem = $scope.producto.tallas[0];
 			   
 			   $scope.almacenes = producto.almacenes;
@@ -30,7 +47,7 @@ controllers
 			    var modalInstance = $uibModal.open({
 			      ariaLabelledBy: 'modal-title',
 			      ariaDescribedBy: 'modal-body',
-			      templateUrl: 'myModalPhotos.html',
+			      templateUrl: 'myModalPublicar.html',//myModalPhotos.html
 			      size:'lg',
 			      controller: 'ModalPublicarController',
 			      scope:$scope
@@ -41,10 +58,6 @@ controllers
 			     }, function () {
 			        console.log('Modal dismissed at: ' + new Date());
 			     });
-			   
-			}, function(errResponse) {
-				alert("Error");
-			});		 
 	  }
 }]);
 
@@ -85,7 +98,7 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		            method: 'POST',
 		            data: {
 		                key: file.name, // the key to store the file on S3, could be file name or customized
-		                AWSAccessKeyId: '',
+		                AWSAccessKeyId: 'AKIAJ4MTAW6NNS5T7IVA',
 		                acl: 'public-read', // sets the access to the uploaded file in the bucket: private, public-read, ...
 		                policy: $scope.policy, // base64-encoded json policy (see article below)
 		                signature: $scope.signature, // base64-encoded signature based on policy string (see article below)
@@ -154,8 +167,8 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	         reader.readAsDataURL(file);
 	}
 });
-	 
-}]).controller('PublicarController',['$scope', 'meli', '$window' , '$location', 'GENERAL_SERVICES' ,function($scope, meli, $window, $location, GENERAL_SERVICES) {
+
+controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$location', 'GENERAL_SERVICES' ,function($scope, meli, $window, $location, GENERAL_SERVICES) {
 	 
 	
 	var token;

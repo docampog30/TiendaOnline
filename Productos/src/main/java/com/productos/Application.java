@@ -12,12 +12,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.productos.schedule.ScheduledTasks;
 
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 public class Application extends SpringBootServletInitializer implements CommandLineRunner{
 	
 	@Resource 
@@ -45,7 +47,7 @@ public class Application extends SpringBootServletInitializer implements Command
 
 	@Override
 	public void run(String... args) throws Exception {
-		services.searchProductsProcess();
+		//services.searchProductsProcess();
 		
 	}
 }

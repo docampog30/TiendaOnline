@@ -1,17 +1,15 @@
 package com.productos.services;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,13 +44,39 @@ public class ProductoService {
 		
 		query.getSelect().getRows().stream()
 				.distinct()
-				.limit(5)
 				.filter(Objects::nonNull)
 				.map(this::buildProducto)
 				.filter(Objects::nonNull)
 				.forEach(p->{
 					repository.save(p);
 				});
+	}
+	
+	public void guardarProductosDiarios(){
+		
+		Query query = integracionService.consultarCreacionProductoMasivo(LocalDate.now(),LocalDate.now());
+		
+		query.getSelect().getRows().parallelStream()
+				.distinct()
+				.filter(Objects::nonNull)
+				.map(this::buildProducto)
+				.filter(Objects::nonNull)
+				.forEach(p->{
+					repository.save(p);
+				});
+	}
+	
+	public List<Producto> recuperarProductosxFiltro(String linea,String marca,LocalDate desde, LocalDate hasta,String almacen,String genero){
+		
+		return integracionService.consultarCreacionProductoMasivo(desde,hasta).getSelect().getRows()
+					.parallelStream()
+					.distinct()
+					.filter(queryProductos(marca, linea, genero))
+					.map(this::buildProducto)
+					.map(this::buildSaldoProducto)
+					.filter(Objects::nonNull)
+					.filter(p-> p.getAlmacenes().contains(almacen))
+					.collect(Collectors.toList());
 	}
 	
 	public List<Producto> recuperarProductosByLinea(String linea){
@@ -67,17 +91,14 @@ public class ProductoService {
 	
 	public Producto buildProducto(Row row){
 		
-		System.err.println("BuildProduct -> "+ row.toString());
-
 		Producto producto = new Producto();
 				
 		producto.setDescripcion(row.getDescripcion());
 		producto.setMarca(row.getMarca());
-		producto.setSexo(row.getCategoria());
+		producto.setGenero(row.getCategoria());
 		producto.setLinea(row.getLinea());
 		producto.setReferenciaProov(row.getReferenciaprov());				
-		System.err.println(producto.toString());
-			
+		
 		return producto;
 	}
 	
@@ -93,16 +114,21 @@ public class ProductoService {
 		
 			if(!rows.isEmpty()){
 			
-				Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));		
-				Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
-				
+				Integer count = rows.stream().collect(Collectors.summingInt(Row::getSaldo));
+				Map<String, Integer> countTotalByTalla = rows.stream().collect(Collectors.groupingBy(Row::getTalla, Collectors.summingInt(Row::getSaldo)));						
 				List<Talla> tallas = countTotalByTalla.entrySet().stream()
 						.map(e -> new Talla(e.getKey(), e.getValue())).collect(Collectors.toList());
 				
-				producto.setTallas(tallas);
-				producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
-				
-				System.err.println(producto.toString());
+				if(tallas.isEmpty() || count <=6){
+					producto = null;
+				}else{
+					Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+					producto.setTallas(tallas);
+					producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
+					System.err.println(producto.getAlmacenes());
+				}
+			}else{
+				producto = null;
 			}
 		}else{
 			producto = null;
@@ -130,5 +156,9 @@ public class ProductoService {
 		productoMercadoLibre.setPictures(picturesList);
 		
 		templateRest.consumePostServices("https://api.mercadolibre.com/items/validate?access_token=APP_USR-8499769276025352-062612-ea160bf3f9f976a544148a1be4224daf__E_I__-261678194", productoMercadoLibre, ResponseValidate.class);
+	}
+	
+	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
+	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
 	}
 }

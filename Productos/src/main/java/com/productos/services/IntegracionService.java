@@ -2,6 +2,7 @@ package com.productos.services;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -42,14 +43,14 @@ public class IntegracionService {
 		}
 	}
 	
-	public Query consultarCreacionProductoMasivo(){
+	public Query consultarCreacionProductoMasivo(LocalDate desde,LocalDate hasta ){
 		String datos = null;
 		CreacionProductoMasivo getSaldosCreadosMasivo = FACTORY.createCreacionProductoMasivo();
 		
 		EncabezadoCreacionProductoMasivo enCreadosMasivo = FACTORY.createEncabezadoCreacionProductoMasivo();
-		enCreadosMasivo.setFechaDesde("21/04/2017");
-		enCreadosMasivo.setFechaHasta("04/07/2017");
-//		enCreadosMasivo.setFechaHasta(DateUtil.localDateTimeToString(LocalDateTime.now(),DateUtil.DATE_FORMATTER));
+		enCreadosMasivo.setFechaDesde(DateUtil.localDateToString(desde,DateUtil.DATE_FORMATTER));
+		
+		enCreadosMasivo.setFechaHasta(DateUtil.localDateToString(hasta,DateUtil.DATE_FORMATTER));
 		
 		getSaldosCreadosMasivo.setAuthentication(AUTHENTICATION);
 		getSaldosCreadosMasivo.setEncabezadoCreacionProductoMasivo(enCreadosMasivo);
@@ -66,6 +67,14 @@ public class IntegracionService {
 		
 
 		return getQuery(datos);
+	}
+	
+	public Query consultarCreacionProductoMasivo(){
+		
+		LocalDate since = DateUtil.StringToLocalDate("01/06/2016", DateUtil.DATE_FORMATTER);
+		LocalDate now = LocalDate.now();
+		
+		return consultarCreacionProductoMasivo(since,now);
 	}
 	
 	public Query consultarDetallexReferenciaProovedor(String referencia){
