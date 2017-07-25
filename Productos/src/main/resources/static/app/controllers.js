@@ -168,10 +168,30 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	}
 });
 
-controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$location', 'GENERAL_SERVICES' ,function($scope, meli, $window, $location, GENERAL_SERVICES) {
+controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$location', 'GENERAL_SERVICES', '$filter' ,function($scope, meli, $window, $location, GENERAL_SERVICES, $filter) {
 	 
-	
 	var token;
+	
+	$scope.variationElement = {
+			attribute_combinations : [
+				{
+					id : "103000",
+					name : "Talla",
+					value_id : "",
+					value_name : ""
+				},
+				{
+					id : "11000",
+					name : "Color Primario",
+					value_id : "2105d8e",
+					value_name : "Negro"
+				}],
+		        price: 0,
+		        available_quantity: 0,
+		        picture_ids:[ 
+		            "http://mla-s2-p.mlstatic.com/968521-MLA20805195516_072016-O.jpg"
+		         ]
+		};
 	
 	$scope.validarToken = function(){
 		var hashParams = $location.hash();
@@ -179,6 +199,7 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 		if (token === undefined || token === null || token === ""){
 			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
 		}
+		$scope.variaciones;
 	}
 	
 	$scope.validarToken();
@@ -186,17 +207,30 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 	var producto = {
 			title : "Item de test - No Ofertar",
 			category_id : "MCO3530", //definir se se selecciona
-			price : 10,
 			currency_id: "COP",
-			available_quantity: 1,
 			buying_mode : "buy_it_now",
 			listing_type_id : "bronze",
 			condition : "new",
 			description : "Item de test - No Ofertar",
-			warranty : "12 months"
+			warranty : "12 months",
+			variations : []
+	}
+	
+	$scope.adicionarVariacion = function(){
+			
+		var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'name':'38'});
+		$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
+		$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
+		$scope.variationElement.price = 10000;
+		$scope.variationElement.available_quantity = 10;
+		producto.variations.push(angular.copy($scope.variationElement));
 	}
 	
 	$scope.publicar = function(){
+		var categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre':'ADIDAS','genero':'HOMBRE'}); 
+		producto.category_id = categoria[0].id;
+		
+		$scope.adicionarVariacion();
 		meli.publicar(producto, token).then(function (data){
 			alert("Registro publicado correctamente");
 		}, function (response) {
