@@ -61,7 +61,7 @@ controllers
 	  }
 }]);
 
-controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload) {
+controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload, $filter, GENERAL_SERVICES) {
 	
 	$scope.images = [];
 	
@@ -147,8 +147,10 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	  }
 	  
 	  $scope.ok = function () {
-		    $uibModalInstance.close($scope.productosAgregados);
-		  };
+		  
+		  $uibModalInstance.close($scope.productosAgregados);
+		  
+	  };
 
 	 $scope.cancel = function () {
 		    $uibModalInstance.dismiss('cancel');
@@ -166,6 +168,31 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	         }
 	         reader.readAsDataURL(file);
 	}
+	
+	
+	$scope.adicionarVariacion = function(){
+		
+		var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'name':'38'});
+		$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
+		$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
+		$scope.variationElement.price = 10000;
+		$scope.variationElement.available_quantity = 10;
+		producto.variations.push(angular.copy($scope.variationElement));
+	}
+	
+	$scope.publicar = function(){
+		$scope.productosAgregados;
+		var categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre':$scope.producto.marca,'genero': $scope.producto.genero}); 
+		producto.category_id = categoria[0].id;
+		
+		$scope.adicionarVariacion();
+		/*meli.publicar(producto, token).then(function (data){
+			alert("Registro publicado correctamente");
+		}, function (response) {
+			alert("Error publicando el producto");
+		});*/
+	}
+	
 });
 
 controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$location', 'GENERAL_SERVICES', '$filter' ,function($scope, meli, $window, $location, GENERAL_SERVICES, $filter) {
