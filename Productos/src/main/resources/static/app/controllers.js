@@ -61,7 +61,7 @@ controllers
 	  }
 }]);
 
-controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload, $filter, GENERAL_SERVICES) {
+controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload, $filter, GENERAL_SERVICES, meli, $location) {
 	
 	$scope.images = [];
 	
@@ -169,28 +169,64 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	         reader.readAsDataURL(file);
 	}
 	
+	var productoMeli = {
+			title : "Item de test - No Ofertar",
+			category_id : "MCO3530", //definir se se selecciona
+			currency_id: "COP",
+			buying_mode : "buy_it_now",
+			listing_type_id : "bronze",
+			condition : "new",
+			description : "Item de test - No Ofertar",
+			warranty : "12 months",
+			variations : []
+	}
+	
+	$scope.variationElement = {
+			attribute_combinations : [
+				{
+					id : "103000",
+					name : "Talla",
+					value_id : "",
+					value_name : ""
+				},
+				{
+					id : "11000",
+					name : "Color Primario",
+					value_id : "2105d8e",
+					value_name : "Negro"
+				}],
+		        price: 0,
+		        available_quantity: 0,
+		        picture_ids:[ 
+		            "http://mla-s2-p.mlstatic.com/968521-MLA20805195516_072016-O.jpg"
+		         ]
+		};
 	
 	$scope.adicionarVariacion = function(){
 		
-		var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'name':'38'});
-		$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
-		$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
-		$scope.variationElement.price = 10000;
-		$scope.variationElement.available_quantity = 10;
-		producto.variations.push(angular.copy($scope.variationElement));
+		$scope.productosAgregados.forEach(function (producto, index){
+			var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'name':'38'});
+			$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
+			$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
+			$scope.variationElement.price = producto.precio;
+			$scope.variationElement.available_quantity = producto.cantidad;
+			productoMeli.variations.push(angular.copy($scope.variationElement));
+		});
 	}
 	
 	$scope.publicar = function(){
 		$scope.productosAgregados;
 		var categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre':$scope.producto.marca,'genero': $scope.producto.genero}); 
-		producto.category_id = categoria[0].id;
+		productoMeli.category_id = categoria[0].id;
 		
 		$scope.adicionarVariacion();
-		/*meli.publicar(producto, token).then(function (data){
+		var hashParams = $location.hash();
+		var token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
+		meli.publicar(productoMeli, token).then(function (data){
 			alert("Registro publicado correctamente");
 		}, function (response) {
 			alert("Error publicando el producto");
-		});*/
+		});
 	}
 	
 });
