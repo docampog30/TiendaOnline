@@ -14,7 +14,6 @@ bower_components
 .bower-tmp
 
 ### Java ###
-
 # Compiled class file
 *.class
 
