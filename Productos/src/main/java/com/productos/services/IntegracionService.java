@@ -1,5 +1,6 @@
 package com.productos.services;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -10,10 +11,13 @@ import org.springframework.stereotype.Service;
 import com.productos.integracion.mahalo.AuthenticationSoapHeader;
 import com.productos.integracion.mahalo.CreacionProductoMasivo;
 import com.productos.integracion.mahalo.EncabezadoCreacionProductoMasivo;
+import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaAlmacen;
 import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedor;
+import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedorAlmacen;
 import com.productos.integracion.mahalo.ExternalService;
 import com.productos.integracion.mahalo.ObjectFactory;
 import com.productos.integracion.mahalo.SaldoxReferenciaProveedor;
+import com.productos.integracion.mahalo.SaldoxReferenciaProveedorAlmacen;
 import com.productos.integracion.mahalo.TicketResponse;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
@@ -43,7 +47,7 @@ public class IntegracionService {
 		}
 	}
 	
-	public Query consultarCreacionProductoMasivo(LocalDate desde,LocalDate hasta ){
+	public Query consultarCreacionProductoMasivo(LocalDate desde,LocalDate hasta){
 		String datos = null;
 		CreacionProductoMasivo getSaldosCreadosMasivo = FACTORY.createCreacionProductoMasivo();
 		
@@ -77,8 +81,7 @@ public class IntegracionService {
 		return consultarCreacionProductoMasivo(since,now);
 	}
 	
-	public Query consultarDetallexReferenciaProovedor(String referencia){
-		
+	public Query consultarDetallexReferencia(String referencia){
 		String datos = null;
 		SaldoxReferenciaProveedor saldoXReferencia = FACTORY.createSaldoxReferenciaProveedor();
 		
@@ -95,11 +98,42 @@ public class IntegracionService {
 
 			System.err.println("Ref_: -> "+referencia);
 		} catch (Exception e) {
-			System.err.println("Error en consultarDetallexReferenciaProovedor "+e.getMessage());
+			System.err.println("Error en consultarDetallexReferencia"+e.getMessage());
 		}
 		return getQuery(datos);
+	}
+
+	
+	public Query consultarDetallexReferenciaProovedor(String referencia,String almacen){
+		if(null != almacen && !almacen.isEmpty()){
+			return consultarDetalleXReferenciaAlmacen(referencia, almacen);
+		}else{
+			return consultarDetallexReferencia(referencia);
+		}
 		
+	}
+	
+	public Query consultarDetalleXReferenciaAlmacen(String referencia,String almacen){
+		String datos = null;
 		
+		EncabezadoSaldoxReferenciaProveedorAlmacen encabezadoSaldoxReferenciaAlmacen = FACTORY.createEncabezadoSaldoxReferenciaProveedorAlmacen();
+		encabezadoSaldoxReferenciaAlmacen.setReferenciaProveedor(referencia);
+		encabezadoSaldoxReferenciaAlmacen.setAlmacen(new BigInteger(almacen));
+		SaldoxReferenciaProveedorAlmacen saldoXReferenciaAlmacen = FACTORY.createSaldoxReferenciaProveedorAlmacen();
+		
+		saldoXReferenciaAlmacen.setAuthentication(AUTHENTICATION);
+		saldoXReferenciaAlmacen.setEncabezadoSaldoxReferenciaProveedorAlmacen(encabezadoSaldoxReferenciaAlmacen);
+		
+		try {
+			ExternalService service = new ExternalService(url);
+			TicketResponse resultadoWS = service.getExternalServiceSoap().getSaldoxReferenciaProveedorAlmacen(saldoXReferenciaAlmacen);
+			datos = resultadoWS.getResultadoTicket().getDatos();
+
+			System.err.println("Ref_: -> "+referencia);
+		} catch (Exception e) {
+			System.err.println("Error en consultarDetallexReferenciaAlmacen "+e.getMessage());
+		}
+		return getQuery(datos);
 	}
 
 	private Query getQuery(String datos) {
@@ -134,6 +168,7 @@ public class IntegracionService {
 		data = data.replace("d_linea", "linea");
 		data = data.replace("d_categoria", "categoria");
 		data = data.replace("cn_saldo", "saldo");
+		data = data.replace("ts_creacion", "fecreacion");
 		
 		
 		return data;

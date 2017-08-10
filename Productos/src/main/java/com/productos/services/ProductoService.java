@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,9 +72,10 @@ public class ProductoService {
 					.distinct()
 					.filter(queryProductos(marca, linea, genero))
 					.map(this::buildProducto)
-					.map(this::buildSaldoProducto)
+					.map(p-> {
+						return this.buildSaldoProducto(p, almacen);
+					})	
 					.filter(Objects::nonNull)
-					.filter(p-> p.getAlmacenes().contains(almacen))
 					.collect(Collectors.toList());
 	}
 	
@@ -86,7 +86,7 @@ public class ProductoService {
 	}
 	
 	public Producto getDetailsByID(String referencia){
-		return buildSaldoProducto (repository.geyByID(referencia));
+		return buildSaldoProducto (repository.geyByID(referencia),null);
 	}
 	
 	public Producto buildProducto(Row row){
@@ -97,14 +97,16 @@ public class ProductoService {
 		producto.setMarca(row.getMarca());
 		producto.setGenero(row.getCategoria());
 		producto.setLinea(row.getLinea());
-		producto.setReferenciaProov(row.getReferenciaprov());				
+		producto.setReferenciaProov(row.getReferenciaprov());	
+		producto.setFecreacion(row.getFecreacion());
+		producto.setPrecio(row.getPrecio());
 		
 		return producto;
 	}
 	
-	public Producto buildSaldoProducto(Producto producto){
+	public Producto buildSaldoProducto(Producto producto,String almacen){
 		
-		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(producto.getReferenciaProov());
+		Query querySaldoxReferencia = integracionService.consultarDetallexReferenciaProovedor(producto.getReferenciaProov(),almacen);
 		
 		if(querySaldoxReferencia != null){
 			List<Row> rows = querySaldoxReferencia.getSelect().getRows().stream()
@@ -159,6 +161,9 @@ public class ProductoService {
 	}
 	
 	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
+	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
+	}
+	public static Predicate<Row> queryAlmacen(String marca, String linea, String genero) {
 	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
 	}
 }

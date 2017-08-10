@@ -3,7 +3,7 @@ mainApp.factory('Productos', ['$resource', function($resource) {
 }]);
 
 mainApp.factory('Detalles', ['$resource', function($resource) {
-	return $resource('/productos/find/:linea/:marca/:genero/:desde/:hasta/:almacen',null,{
+	return $resource('/productos/find/:linea/:marca/:genero/:desde/:hasta',null,{
 		 query: {
 		      method: 'GET',
 		      isArray: true,

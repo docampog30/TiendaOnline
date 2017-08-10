@@ -4,7 +4,8 @@ controllers
 	  $scope.lineas = ["CALZADO","ROPA","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
 	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA"];
-	  $scope.tiendas = [{codigo:"3",nombre:'PALACIO'},
+	  $scope.tiendas = [{codigo:"",nombre:''},
+		  				{codigo:"3",nombre:'PALACIO'},
 		  				{codigo:"4",nombre:'GIRARDOTA'},
 		  				{codigo:"5",nombre:'SAN DIEGO'},
 		  				{codigo:"8",nombre:'HOLLYWOOD'},
@@ -59,6 +60,22 @@ controllers
 			        console.log('Modal dismissed at: ' + new Date());
 			     });
 	  }
+	  
+	  $scope.openAlmacenes = function (producto) {
+		  
+		  var almacenesproducto =[]; 
+		  angular.forEach(producto.almacenes, function(almacen, key) {
+				almacenesproducto.push($scope.tiendas.find(x => x.codigo == almacen).nombre);
+			});
+		  		    var modalInstance = $uibModal.open({
+		  		      ariaDescribedBy: 'modal-body',
+		  		      ariaLabelledBy: 'modal-title',
+		  		      templateUrl: 'myModalAlmacenes.html',
+		  		      controller: function($scope) {
+		  		    	  $scope.almacenes = almacenesproducto;
+		  		        }
+		  		    });
+		  	  }
 }]);
 
 controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload) {

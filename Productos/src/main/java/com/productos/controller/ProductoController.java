@@ -6,9 +6,11 @@ import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.productos.model.Producto;
@@ -21,8 +23,8 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 	
-	@RequestMapping(method = RequestMethod.GET,value="/find/{linea}/{marca}/{genero}/{desde}/{hasta}/{almacen}")
-	public List<Producto> buscarProductosByLinea(@PathVariable String linea,@PathVariable String marca,@PathVariable String genero,@PathVariable Long desde,@PathVariable Long hasta,@PathVariable String almacen) {
+	@RequestMapping(method = RequestMethod.GET,value="/find/{linea}/{marca}/{genero}/{desde}/{hasta}")
+	public List<Producto> recuperarProductosxFiltro(@PathVariable String linea,@PathVariable String marca,@PathVariable String genero,@PathVariable Long desde,@PathVariable Long hasta,@RequestParam(name="almacen",required=false) String almacen) {
 		
 		LocalDate dateDesde = Instant.ofEpochMilli(desde).atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate dateHasta = Instant.ofEpochMilli(hasta).atZone(ZoneId.systemDefault()).toLocalDate();

@@ -29,9 +29,14 @@ public class Producto {
 	@DynamoDBAttribute
 	private String marca;
 	
+	@DynamoDBAttribute
+	private String precio;
+	
 	@DynamoDBHashKey(attributeName = "referencia")
 	@NotNull(message = "referencia must not be empty")
 	private String referenciaProov;
+	
+	private String fecreacion;
 	
 	public String getDescripcion() {
 		return descripcion;
@@ -87,5 +92,19 @@ public class Producto {
 		return "Producto [descripcion=" + descripcion + ", saldo=" + saldo + ", tallas=" + tallas + ", almacenes="
 				+ almacenes + ", linea=" + linea + ", genero=" + genero + ", marca=" + marca + ", referenciaProov="
 				+ referenciaProov + "]";
+	}
+	public String getFecreacion() {
+		return fecreacion;
+	}
+	public void setFecreacion(String fecreacion) {
+		this.fecreacion = fecreacion;
+	}
+	
+	public String getPrecio() {
+		return precio;
+	}
+	
+	public void setPrecio(String precio) {
+		this.precio = precio;
 	}
 }

@@ -39,7 +39,21 @@ public class Row {
 	
 	@XStreamAsAttribute
 	private String saldo;
+	
+	@XStreamAsAttribute
+	private String fecreacion;
+	
+	@XStreamAsAttribute
+	private String precio;
 
+	
+	public String getFecreacion() {
+		return fecreacion == null ? "" : fecreacion.substring(0, 10);
+	}
+	
+	public void setFecreacion(String fecreacion) {
+		this.fecreacion = fecreacion;
+	}
 	
 	public String getReferenciaprov() {
 		return referenciaprov;
@@ -136,6 +150,14 @@ public class Row {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	
+	public String getPrecio() {
+		return precio;
+	}
+	
+	public void setPrecio(String precio) {
+		this.precio = precio;
 	}
 	
 	
