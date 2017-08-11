@@ -32,27 +32,33 @@ mainApp.constant('GENERAL_SERVICES', {
 			      },
 			      {
 			        "id": "d8c1837",
-			        "name": "38"
+			        "name": "38",
+			        "mahalo": "13"
 			      },
 			      {
 			        "id": "103000-51a660",
-			        "name": "38.5"
+			        "name": "38.5",
+			        "mahalo": "14"
 			      },
 			      {
 			        "id": "3ee0176",
-			        "name": "39"
+			        "name": "39",
+			        "mahalo": "15"
 			      },
 			      {
 			        "id": "103000-6b0c6b",
-			        "name": "39.5"
+			        "name": "39.5",
+			        "mahalo": "16"
 			      },
 			      {
 			        "id": "6932ab7",
-			        "name": "40"
+			        "name": "40",
+			        "mahalo": "17"
 			      },
 			      {
 			        "id": "103000-cdab07",
-			        "name": "40.5"
+			        "name": "40.5",
+			        "mahalo": "18"
 			      },
 			      {
 			        "id": "8508fb2",
@@ -102,40 +108,134 @@ mainApp.constant('GENERAL_SERVICES', {
     					genero : "HOMBRE"
     				},
     				{
-    					id : "MCO7000",
+    					id : "MCO7438",
+    					nombre : "NIKE" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO7439",
+    					nombre : "PUMA" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO62533",
+    					nombre : "NEW BALANCE",
+    					genero : "HOMBRE" 
+    				},
+    				{
+    					id : "MCO172840",
+    					nombre : "LEVIS" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO79566",
+    					nombre : "LACOSTE" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "",
+    					nombre : "LOTTO" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO115241",
+    					nombre : "JORDAN" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "",
+    					nombre : "KAPPA" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO62611",
     					nombre : "ADIDAS",
     					genero : "MUJER"
     				},
     				{
-    					id : "MCO7438",
-    					nombre : "NIKE" 
+    					id : "MCO62614",
+    					nombre : "NIKE" ,
+    					genero : "MUJER"
     				},
     				{
-    					id : "MCO7439",
-    					nombre : "PUMA" 
+    					id : "MCO62633",
+    					nombre : "PUMA" ,
+    					genero : "MUJER"
     				},
     				{
-    					id : "MCO62533",
-    					nombre : "NEW BALANCE" 
+    					id : "MCO62600",
+    					nombre : "NEW BALANCE",
+    					genero : "MUJER" 
     				},
     				{
-    					id : "MCO172840",
-    					nombre : "LEVIS" 
+    					id : "MCO172838",
+    					nombre : "LEVIS" ,
+    					genero : "MUJER"
     				},
     				{
-    					id : "MCO79566",
-    					nombre : "LACOSTE" 
-    				},
-    				{
-    					id : "",
-    					nombre : "LOTTO" 
-    				},
-    				{
-    					id : "MCO115241",
-    					nombre : "JORDAN" 
+    					id : "MCO79567",
+    					nombre : "LACOSTE" ,
+    					genero : "MUJER"
     				},
     				{
     					id : "",
-    					nombre : "KAPPA" 
-    				}]
+    					nombre : "LOTTO" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO115242",
+    					nombre : "JORDAN" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "",
+    					nombre : "KAPPA" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO62634",
+    					nombre : "ADIDAS",
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO62627",
+    					nombre : "NIKE" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO62628",
+    					nombre : "PUMA" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO62594",
+    					nombre : "NEW BALANCE",
+    					genero : "NIÑO" 
+    				},
+    				{
+    					id : "MCO172839",
+    					nombre : "LEVIS" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO79568",
+    					nombre : "LACOSTE" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "",
+    					nombre : "LOTTO" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO113404",
+    					nombre : "JORDAN" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "",
+    					nombre : "KAPPA" ,
+    					genero : "NIÑO"
+    				}
+    				]
 	});

@@ -117,7 +117,7 @@
 			<td>{{prod.talla}}</td>
 			<td>{{prod.cantidad}}</td>
 			<td>{{prod.precio}}</td>
-			<td><button type="button" class="btn btn btn-danger">Eliminar
+			<td><button type="button" class="btn btn btn-danger" ng-click = "eliminarProducto($index)">Eliminar
 				<span class="glyphicon glyphicon-erase"></span>	
 			</button></td>
 		  </tr>
@@ -125,7 +125,7 @@
 </div>
         </div>
 		<div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-xs" ng-click="ok()">Publicar
+        <button type="button" class="btn btn-primary btn-xs" ng-click="publicar()">Publicar
         </button>
         </div>
 </script>

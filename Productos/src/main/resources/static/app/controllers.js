@@ -185,7 +185,7 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	$scope.adicionarVariacion = function(){
 		
 		$scope.productosAgregados.forEach(function (producto, index){
-			var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'name':'38'});
+			var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'mahalo' : producto.talla});
 			$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
 			$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
 			$scope.variationElement.price = producto.precio;
@@ -207,6 +207,10 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		}, function (response) {
 			alert("Error publicando el producto");
 		});
+	}
+	
+	$scope.eliminarProducto = function(index){
+		$scope.productosAgregados.splice(index, 1);
 	}
 	
 });
