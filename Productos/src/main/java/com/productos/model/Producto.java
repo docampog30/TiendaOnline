@@ -30,6 +30,12 @@ public class Producto {
 	private String marca;
 	
 	@DynamoDBAttribute
+	private String habilitado;
+	
+	@DynamoDBAttribute
+	private String preciocompra;
+	
+	@DynamoDBAttribute
 	private String precio;
 	
 	@DynamoDBHashKey(attributeName = "referencia")
@@ -100,11 +106,26 @@ public class Producto {
 		this.fecreacion = fecreacion;
 	}
 	
+	public String getPreciocompra() {
+		return preciocompra;
+	}
+	
+	public void setPreciocompra(String preciocompra) {
+		this.preciocompra = preciocompra;
+	}
+	
 	public String getPrecio() {
 		return precio;
 	}
-	
 	public void setPrecio(String precio) {
 		this.precio = precio;
+	}
+	
+	public boolean getHabilitado() {
+		return "S".equals(habilitado) ? true : false;
+	}
+	
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado ? "S":"N";
 	}
 }

@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.productos.bd.AmazonBD;
@@ -34,6 +35,15 @@ public class ProductoService {
 	
 	@Autowired
 	private  AmazonBD repository;
+	
+	@Autowired
+	private MailService mailService;
+	
+	@Value("${mail.snk}")
+	private String mailsnk;
+	
+	@Value("${mail.sportage}")
+	private String mailSportage;
 	
 	public void guardarProductosProcess(){
 		
@@ -127,7 +137,9 @@ public class ProductoService {
 					Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
 					producto.setTallas(tallas);
 					producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
-					System.err.println(producto.getAlmacenes());
+					Producto productBD = repository.geyByID(producto.getReferenciaProov());
+					producto.setHabilitado(productBD == null ? false :productBD.getHabilitado());
+					producto.setPreciocompra(productBD == null ? null :productBD.getPreciocompra());
 				}
 			}else{
 				producto = null;
@@ -165,5 +177,26 @@ public class ProductoService {
 	}
 	public static Predicate<Row> queryAlmacen(String marca, String linea, String genero) {
 	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
+	}
+	
+	public void actualizarProducto(Producto producto) {
+		repository.save(producto);
+		if(producto.getPreciocompra() == null){
+			mailService.send(mailSportage,"Precio productos por asignar",getBodyMailProductosPorAsignar());
+		}else{
+			mailService.send(mailsnk,"Precio productos asignados",getBodyMailProductosAsignados());
+		}
+	}
+	
+	private String getBodyMailProductosAsignados() {
+		return "Saludos \n Ya están listos los costos. Por favor revisar";
+	}
+	
+	private String getBodyMailProductosPorAsignar() {
+		return " Hola \n Actualmente tienes referencias por asignar costos, por favor dirigirse al siguiente link \n\n 52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
+	}
+
+	public List<Producto> recuperarProductosHabilitados(){
+		return repository.selectProductHabilitados();
 	}
 }

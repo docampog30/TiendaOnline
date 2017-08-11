@@ -12,9 +12,9 @@ mainApp.config(['$routeProvider',
 	            templateUrl: 'consulta.html',
 	            controller: 'ConsultaController'
 	         }).
-	         when('/publicar', {
-	            templateUrl: 'publicar.html',
-	            controller: 'PublicarController'
+	         when('/precios', {
+	            templateUrl: 'precios.html',
+	            controller: 'PreciosController'
 	         }).
 	         otherwise({
 	            redirectTo: '/home'

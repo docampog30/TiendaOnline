@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -27,12 +28,7 @@ public class AmazonBD {
 	public void save(Producto customer) {
 		
 		try {
-			if(geyByID(customer.getReferenciaProov())==null){
-				dbMapper.save(customer, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.CLOBBER));
-			}
-			else{
-				System.err.println("No guardó");
-			}
+			dbMapper.save(customer, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.CLOBBER));
 		} catch (Exception e) {
 			System.err.println("Error guardando producto "+e.getMessage());
 		}
@@ -86,6 +82,23 @@ public class AmazonBD {
 		  .withFilterExpression("#genero = :genero");
 		  
 		 return dbMapper.parallelScan(Producto.class,scanExpression,3);
+	}
+	
+	public List<Producto> selectProductHabilitados(){
+
+		 Map<String, AttributeValue> attributeValues = new HashMap<String, AttributeValue>();
+		    attributeValues.put(":habilita", new AttributeValue().withN("1"));
+		 
+		    Map<String, String> attributeNames = new HashMap<String, String>();
+		    attributeNames.put("#habilitado", "habilitado");
+		    
+		  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+		  scanExpression
+		  .withExpressionAttributeValues(attributeValues)
+		  .withExpressionAttributeNames(attributeNames)
+		  .withFilterExpression("#habilitado = :habilita");
+		  
+		 return dbMapper.parallelScan(Producto.class,scanExpression,2);
 	}
 
 }

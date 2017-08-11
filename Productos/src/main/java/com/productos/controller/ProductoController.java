@@ -6,8 +6,8 @@ import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,11 +36,17 @@ public class ProductoController {
 	public Producto buscarProductosById(@PathVariable String ref) {
 		return productoService.getDetailsByID(ref);
 	}
-  
+	
 	@RequestMapping(method = RequestMethod.PUT)
-	public void publicar() {
-		
+	public void actualizar(@RequestBody Producto producto) {
+		productoService.actualizarProducto(producto);
 	}
+	
+	  @RequestMapping(method = RequestMethod.GET,value="habilitados")
+	  public List<Producto> findProductosHabilitados() {
+	    return productoService.recuperarProductosHabilitados();
+	  }
+  
   
 //  @RequestMapping(method = RequestMethod.GET)
 //  public List<Item> findItems() {

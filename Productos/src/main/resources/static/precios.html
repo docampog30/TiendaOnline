@@ -1,0 +1,33 @@
+ <form class="form-horizontal" role="form"> 
+ <div class="container">  
+<div class="panel panel-default">
+
+		 <div class="panel-heading">Productos disponibles para gestionar</div>
+		
+		 <table class="table">
+		  <tr>
+			<th>Descripción </th>
+			<th>Referencia</th>
+		    <th>Linea </th>
+		    <th>Genero </th>
+		    <th>Marca </th>
+		    <th>Precio venta sportage</th>
+		     <th>Precio venta SNK</th>
+		</tr>
+		  <tr ng-repeat="producto in productos">
+		    <td>{{producto.descripcion}}</td>
+		    <td>{{producto.referenciaProov}}</td>
+		    <td>{{producto.linea}}</td>
+		    <td>{{producto.genero}}</td>
+		    <td>{{producto.marca}}</td>
+		     <td>{{producto.precio}}</td>
+		    <td><input type="number" ng-model="producto.preciocompra"/><td>
+		    <td><button type="button" class="btn btn-info" ng-click = "guardar(producto)">Guardar</button></td>	
+		  	
+		  </tr>
+		</table>
+	</div>
+	
+	</div>
+	</form>
+	
