@@ -1,5 +1,5 @@
 controllers
-  .controller('ConsultaController',['$scope','Detalles','Productos','$uibModal','Upload',function($scope,Detalles,Productos, $uibModal,Upload) {
+  .controller('ConsultaController',['$scope','Detalles','Productos','$window','$location','$uibModal','Upload','GENERAL_SERVICES','$filter',function($scope,Detalles,Productos,$window,$location,$uibModal,Upload,GENERAL_SERVICES,$filter) {
 	  
 	  $scope.lineas = ["CALZADO","PRENDAS DE VESTIR","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
@@ -19,6 +19,20 @@ controllers
 	  $scope.lineaSelected = $scope.lineas[0];
 	  $scope.agregar = {};
 	  $scope.productosAgregados = [];
+	  $scope.tallasProducto = [];
+	  
+	  var token;
+	  
+		$scope.validarToken = function(){
+			var hashParams = $location.hash();
+			token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
+			if (token === undefined || token === null || token === ""){
+				$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
+			}
+			$scope.variaciones;
+		}
+		
+		$scope.validarToken();
 	  
 	  $scope.consultarProductos = function(){
 		  
@@ -33,18 +47,42 @@ controllers
 			});
 	  }
 	  
+	  $scope.homologarTallas = function (tallasMahalo){
+		  
+		  var tallaProducto = {
+						id : "",
+						name : "",
+						cantidad : ""
+					}
+		  
+		  tallasMahalo.forEach(function (tallaMahalo, index){
+				var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'mahalo' : tallaMahalo.descripcion});
+				if (talla[0]){
+					tallaProducto.id = talla[0].id;
+					tallaProducto.name = talla[0].name;
+					tallaProducto.cantidad = tallaMahalo.cantidad;
+					
+				}else{
+					tallaProducto.name = "error";
+				}
+				$scope.tallasColombia.push(angular.copy(tallaProducto));
+				
+			});
+	  }
+	  
 	  $scope.publicar = function (producto) {
 		  
 		  $scope.productosAgregados = [];
 		  $scope.agregar = {};
 		  $scope.producto ={};
 		  $scope.selectedItem = {};
-
-			  $scope.producto = producto;
-			  $scope.selectedItem = $scope.producto.tallas[0];
+		  $scope.tallasColombia = [];
+		  
+		  $scope.producto = producto;
+		  $scope.selectedItem = $scope.producto.tallas[0];
 			   
 			   $scope.almacenes = producto.almacenes;
-			   
+			   $scope.homologarTallas($scope.producto.tallas);
 			    var modalInstance = $uibModal.open({
 			      ariaLabelledBy: 'modal-title',
 			      ariaDescribedBy: 'modal-body',
@@ -111,8 +149,9 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	  });
 	  
 	  $scope.changeTalla = function(newValue){
-		  $scope.agregar.talla = newValue.descripcion;
+		  $scope.agregar.talla = newValue.name;
 		  $scope.agregar.cantidad = newValue.cantidad;
+		  $scope.agregar.idtalla = newValue.id;
 	  }
 	  
 	  $scope.agregarCantidad = function(talla){
@@ -138,26 +177,20 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	
 	$scope.stepsModel = [];
 	
-	$scope.add =function(event){
-		 var file = document.getElementById('file').files[0];
-	        var reader  = new FileReader();
-	        reader.onload = function(e)  {
-	            var image = document.createElement("img");
-	            image.src = e.target.result;
-	            document.body.appendChild(image);
-	         }
-	         reader.readAsDataURL(file);
+	$scope.adicionarImagen = function(){
+		 $scope.images.push($scope.producto.imagen);
+		 $scope.producto.imagen = "";
 	}
 	
 	var productoMeli = {
-			title : "Item de test - No Ofertar",
-			category_id : "MCO3530", //definir se se selecciona
+			title : "",
+			category_id : "", //definir se se selecciona
 			currency_id: "COP",
 			buying_mode : "buy_it_now",
 			listing_type_id : "bronze",
 			condition : "new",
-			description : "Item de test - No Ofertar",
-			warranty : "12 months",
+			description : "",
+			warranty : "2 meses",
 			variations : []
 	}
 	
@@ -185,11 +218,11 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	$scope.adicionarVariacion = function(){
 		
 		$scope.productosAgregados.forEach(function (producto, index){
-			var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'mahalo' : producto.talla});
-			$scope.variationElement.attribute_combinations[0].value_id = talla[0].id;
-			$scope.variationElement.attribute_combinations[0].value_name = talla[0].name;
+			$scope.variationElement.attribute_combinations[0].value_id = producto.idtalla;
+			$scope.variationElement.attribute_combinations[0].value_name = producto.talla;
 			$scope.variationElement.price = producto.precio;
 			$scope.variationElement.available_quantity = producto.cantidad;
+			$scope.variationElement.picture_ids = $scope.images;
 			productoMeli.variations.push(angular.copy($scope.variationElement));
 		});
 	}
@@ -198,6 +231,8 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		$scope.productosAgregados;
 		var categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre':$scope.producto.marca,'genero': $scope.producto.genero}); 
 		productoMeli.category_id = categoria[0].id;
+		productoMeli.title = $scope.producto.descripcion;
+		productoMeli.description = $scope.producto.descripcion;
 		
 		$scope.adicionarVariacion();
 		var hashParams = $location.hash();

@@ -72,8 +72,11 @@
 			<input type="text" class="form-control" ng-model="producto.descripcion" placeholder="Nombre producto">
 			<span class="glyphicon glyphicon-edit form-control-feedback"></span>	
           </div>
-
-        </div>
+		<div>
+        	<input type="text" class="form-control" ng-model="producto.imagen" placeholder="Url imagen">
+			<button type="submit" class="btn btn-warning pull-right" ng-click="adicionarImagen()">+</button>
+		</div>
+   </div>
 <div class="modal-body">	
 	 <table class="table">
 		<tr>
