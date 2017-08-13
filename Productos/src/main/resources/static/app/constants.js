@@ -99,7 +99,40 @@ mainApp.constant('GENERAL_SERVICES', {
 			      {
 			        "id": "103000-62625e",
 			        "name": "45.5"
-			      }
+			      },
+			      {
+			        "id": "103000-62625e",
+			        "name": "XS",
+			        "mahalo": "62"
+				  },
+				  {
+			        "id": "103000-62625e",
+			        "name": "S",
+			        "mahalo": "63"
+				  }
+				  ,
+				  {
+			        "id": "103000-62625e",
+			        "name": "M",
+			        "mahalo": "64"
+				  }
+				  ,
+				  {
+			        "id": "103000-62625e",
+			        "name": "L",
+			        "mahalo": "65"
+				  }
+				  ,
+				  {
+			        "id": "103000-62625e",
+			        "name": "XL",
+			        "mahalo": "66"
+				  },
+				  {
+			        "id": "103000-62625e",
+			        "name": "XXL",
+			        "mahalo": "82"
+				  }
 			     ],
 			     
 		'MARCAS' : [{

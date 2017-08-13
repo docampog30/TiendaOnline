@@ -1,7 +1,7 @@
 controllers
   .controller('ConsultaController',['$scope','Detalles','Productos','$uibModal','Upload',function($scope,Detalles,Productos, $uibModal,Upload) {
 	  
-	  $scope.lineas = ["CALZADO","ROPA","ACCESORIOS"];
+	  $scope.lineas = ["CALZADO","PRENDAS DE VESTIR","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
 	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA"];
 	  $scope.tiendas = [{codigo:"",nombre:''},
