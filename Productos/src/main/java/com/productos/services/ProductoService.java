@@ -1,7 +1,6 @@
 package com.productos.services;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,20 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.productos.bd.AmazonBD;
-import com.productos.common.TemplateRest;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
-import com.productos.model.Pictures;
 import com.productos.model.Producto;
-import com.productos.model.ProductoMercadoLibre;
-import com.productos.model.ResponseValidate;
 import com.productos.model.Talla;
+import com.productos.util.FileUtil;
 
 @Service
 public class ProductoService {
-	
-	@Autowired
-	private TemplateRest templateRest;
 	
 	@Autowired
 	private IntegracionService integracionService;
@@ -38,12 +31,6 @@ public class ProductoService {
 	
 	@Autowired
 	private MailService mailService;
-	
-	@Value("${mail.snk}")
-	private String mailsnk;
-	
-	@Value("${mail.sportage}")
-	private String mailSportage;
 	
 	public void guardarProductosProcess(){
 		
@@ -150,27 +137,6 @@ public class ProductoService {
 		
 		return producto;
 	}
-		
-	public void publicarProducto(){
-		ProductoMercadoLibre productoMercadoLibre = new ProductoMercadoLibre();
-		productoMercadoLibre.setTitle("Item de test - No Ofertar");
-		productoMercadoLibre.setCategory_id("MCO3530");
-		productoMercadoLibre.setPrice(10);
-		productoMercadoLibre.setCurrency_id("COP");
-		productoMercadoLibre.setAvailable_quantity(1);
-		productoMercadoLibre.setBuying_mode("buy_it_now");
-		productoMercadoLibre.setListing_type_id("bronze");
-		productoMercadoLibre.setCondition("new");
-		productoMercadoLibre.setDescription("Item de test - No Ofertar");
-		
-		List<Pictures> picturesList = new ArrayList<>(); 
-		Pictures pictures = new Pictures();
-		pictures.setSource("http://mla-s2-p.mlstatic.com/968521-MLA20805195516_072016-O.jpg");
-		
-		productoMercadoLibre.setPictures(picturesList);
-		
-		templateRest.consumePostServices("https://api.mercadolibre.com/items/validate?access_token=APP_USR-8499769276025352-062612-ea160bf3f9f976a544148a1be4224daf__E_I__-261678194", productoMercadoLibre, ResponseValidate.class);
-	}
 	
 	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
 	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
@@ -181,15 +147,18 @@ public class ProductoService {
 	
 	public void actualizarProducto(Producto producto) {
 		repository.save(producto);
+		
+		List<String> list = FileUtil.readfile("mail.txt");
+		
 		if(producto.getPreciocompra() == null){
-			mailService.send(mailSportage,"Precio productos por asignar",getBodyMailProductosPorAsignar());
+			mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
 		}else{
-			mailService.send(mailsnk,"Precio productos asignados",getBodyMailProductosAsignados());
+			mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
 		}
 	}
 	
 	private String getBodyMailProductosAsignados() {
-		return "Saludos \n Ya están listos los costos. Por favor revisar";
+		return "Saludos \n Ya están listos los costos. Por favor revisar";	
 	}
 	
 	private String getBodyMailProductosPorAsignar() {

@@ -47,7 +47,6 @@ public class ProductoController {
 	    return productoService.recuperarProductosHabilitados();
 	  }
   
-  
 //  @RequestMapping(method = RequestMethod.GET)
 //  public List<Item> findItems() {
 //    return repo.findAll();
