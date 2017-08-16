@@ -56,10 +56,14 @@ controllers
 					}
 		  
 		  tallasMahalo.forEach(function (tallaMahalo, index){
-				var talla = $filter('filter')(GENERAL_SERVICES.TALLAS, {'mahalo' : tallaMahalo.descripcion});
-				if (talla[0]){
-					tallaProducto.id = talla[0].id;
-					tallaProducto.name = talla[0].name;
+			  
+				var talla = GENERAL_SERVICES.TALLAS.filter(function ( obj ) {
+				    return obj.mahalo === tallaMahalo.descripcion;
+				})[0];
+				
+				if (talla){
+					tallaProducto.id = talla.id;
+					tallaProducto.name = talla.name;
 					tallaProducto.cantidad = tallaMahalo.cantidad;
 					
 				}else{
@@ -279,7 +283,7 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 		var hashParams = $location.hash();
 		token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
 		if (token === undefined || token === null || token === ""){
-			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
+			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID+"&redirect_uri=http://localhost:8080/#!/home";
 		}
 		$scope.variaciones;
 	}
