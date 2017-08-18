@@ -82,7 +82,7 @@
 		<tr>
 			<td>
 				<label class="col-form-label">Talla</label>
-				<select style="display: table-row" ng-model = "selectedItem" class="form-control" ng-options="item as item.descripcion for item in producto.tallas"> </select>
+				<select ng-model = "selectedItem" class="form-control" ng-options="item as item.name for item in tallasColombia"> </select>
 			</td>
 		    <td>
 				<label class="col-form-label">Cantidad x talla</label>
