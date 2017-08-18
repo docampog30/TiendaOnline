@@ -1,5 +1,5 @@
 controllers
-  .controller('ConsultaController',['$scope','Detalles','Productos','$window','$location','$uibModal','Upload','GENERAL_SERVICES','$filter',function($scope,Detalles,Productos,$window,$location,$uibModal,Upload,GENERAL_SERVICES,$filter) {
+  .controller('ConsultaController',['$scope','Detalles','Productos','$window','$location','$uibModal','GENERAL_SERVICES','$filter',function($scope,Detalles,Productos,$window,$location,$uibModal,GENERAL_SERVICES,$filter) {
 	  
 	  $scope.lineas = ["CALZADO","PRENDAS DE VESTIR","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
@@ -143,7 +143,7 @@ controllers
 		  	  }
 }]);
 
-controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance,Upload, $filter, GENERAL_SERVICES, meli, $location) {
+controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance, $filter, GENERAL_SERVICES, meli, $location) {
 	
 	$scope.images = [];
 
@@ -182,8 +182,13 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	$scope.stepsModel = [];
 	
 	$scope.adicionarImagen = function(){
-		 $scope.images.push($scope.producto.imagen);
-		 $scope.producto.imagen = "";
+		if ($scope.images.length < 6){
+			$scope.images.push($scope.producto.imagen);
+			 document.getElementById("imagenesView").innerHTML += '<img src="' + $scope.producto.imagen + '" height="90px">';
+			 $scope.producto.imagen = "";
+		}else{
+			alert("Solo se puede ingresar hasta 6 imagenes");
+		}
 	}
 	
 	var productoMeli = {

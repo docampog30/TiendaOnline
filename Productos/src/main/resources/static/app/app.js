@@ -3,8 +3,7 @@ var mainApp = angular.module("myApp", ['ngRoute',
 'myApp.controllers',
 'ngResource',
 'chieffancypants.loadingBar',
-'ui.bootstrap',
-'ngFileUpload']);
+'ui.bootstrap']);
 mainApp.config(['$routeProvider',
 	   function($routeProvider) {
 	      $routeProvider.
