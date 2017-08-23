@@ -3,7 +3,7 @@ controllers
 	  
 	  $scope.lineas = ["CALZADO","PRENDAS DE VESTIR","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
-	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA"];
+	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA","VANS","CONVERSE","TOMMY HILFIGER","DC","OAKLEY","UNDER ARMOUR"];
 	  $scope.tiendas = [{codigo:"",nombre:''},
 		  				{codigo:"3",nombre:'PALACIO'},
 		  				{codigo:"4",nombre:'GIRARDOTA'},
@@ -15,6 +15,7 @@ controllers
 		  				{codigo:"12",nombre:'MOLINOS'},
 		  				{codigo:"13",nombre:'PREMIUM'},
 		  				{codigo:"14",nombre:'FLORIDA'}];
+	  
 	  $scope.search = {};
 	  $scope.lineaSelected = $scope.lineas[0];
 	  $scope.agregar = {};
@@ -46,6 +47,16 @@ controllers
 				alert("No existe disponibilidad de producto seleccionado");
 			});
 	  }
+	  
+	  $scope.consultarProductosReferencia = function(){
+		  var entries = Productos.buscarPorReferencia($scope.referenciaSearch).then(function(todo) {
+			   $scope.productos = [todo.data];
+			}, function(errResponse) {
+				alert("No existe disponibilidad de producto seleccionado");
+			});
+	  }
+	  
+	  
 	  
 	  $scope.homologarTallas = function (tallasMahalo){
 		  

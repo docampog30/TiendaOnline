@@ -1,9 +1,5 @@
 mainApp.factory('Productos', ['$http', function($http) {
 	var dataFactory = {};
-
-   	dataFactory.guardar = function(matrimonio){
-   	 	return $http.post('/partidas/matrimonio',matrimonio);
-   	}
    	
 	dataFactory.recuperarHabilitados = function(){
    	 	return $http.get('/productos/habilitados');
@@ -11,6 +7,10 @@ mainApp.factory('Productos', ['$http', function($http) {
 	
 	dataFactory.actualizar = function(producto){
    	 	return $http.put('/productos',producto)
+   	}
+	
+	dataFactory.buscarPorReferencia = function(referencia){
+   	 	return $http.get('/productos/find/'+referencia)
    	}
    	
    	return dataFactory;

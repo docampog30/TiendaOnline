@@ -1,7 +1,7 @@
  <form class="form-horizontal" role="form"> 
  <div class="container">     
-      <div class="page-header">
-        <h1>GESTOR DE PUBLICACIÓN</h1>
+      <div>
+        <h3>GESTOR DE PUBLICACIÓN</h3>
       </div>
       <div class="alert alert-info" role="alert" ng-hide="productos.length > 0">
         No existen registros.
@@ -32,6 +32,13 @@
 	    
 	 	<button type="button" class="btn btn-warning" ng-click = "consultarProductos()">Consultar</button>
       </div>
+      
+      <div class="form-inline">
+       <label class="mr-sm-2 form-control">Referencia : </label>
+	      <input type="text" class="mb-2 mr-sm-2 mb-sm-0  form-control" required ng-model = "referenciaSearch"/>
+	 	<button type="button" class="btn btn-warning" ng-click = "consultarProductosReferencia()">Consultar</button>
+	 	</div>
+      
       <div class="panel panel-default">
 
 		 <div class="panel-heading">Productos disponibles</div>

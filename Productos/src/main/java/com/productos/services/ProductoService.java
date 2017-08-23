@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.productos.bd.AmazonBD;
@@ -83,7 +82,11 @@ public class ProductoService {
 	}
 	
 	public Producto getDetailsByID(String referencia){
-		return buildSaldoProducto (repository.geyByID(referencia),null);
+		
+		Producto producto = new Producto();
+		producto.setReferenciaProov(referencia);
+		
+		return buildSaldoProducto (producto,null);
 	}
 	
 	public Producto buildProducto(Row row){
@@ -127,6 +130,18 @@ public class ProductoService {
 					Producto productBD = repository.geyByID(producto.getReferenciaProov());
 					producto.setHabilitado(productBD == null ? false :productBD.getHabilitado());
 					producto.setPreciocompra(productBD == null ? null :productBD.getPreciocompra());
+					
+					if(producto.getDescripcion() == null){
+						
+						Row row = querySaldoxReferencia.getSelect().getRows().get(0);
+						producto.setDescripcion(row.getDescripcion());
+						producto.setMarca(productBD == null ? null : productBD.getMarca());
+						producto.setGenero(productBD == null ? null : productBD.getGenero());
+						producto.setLinea(productBD == null ? null : productBD.getLinea());
+						producto.setReferenciaProov(row.getReferenciaprov());	
+						producto.setFecreacion(row.getFecreacion());
+						producto.setPrecio(row.getPrecio());
+					}
 				}
 			}else{
 				producto = null;

@@ -16,6 +16,10 @@ mainApp.config(['$routeProvider',
 	            templateUrl: 'precios.html',
 	            controller: 'PreciosController'
 	         }).
+	         when('/publicar', {
+		            templateUrl: 'publicar.html',
+		            controller: 'PublicarController'
+		         }).
 	         otherwise({
 	            redirectTo: '/home'
 	         });

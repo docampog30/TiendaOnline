@@ -37,6 +37,7 @@ public class ProductoController {
 		return productoService.getDetailsByID(ref);
 	}
 	
+	
 	@RequestMapping(method = RequestMethod.PUT)
 	public void actualizar(@RequestBody Producto producto) {
 		productoService.actualizarProducto(producto);
