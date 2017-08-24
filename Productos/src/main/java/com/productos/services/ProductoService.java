@@ -154,12 +154,9 @@ public class ProductoService {
 	}
 	
 	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
-	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
+	    return r -> r.getMarca().equals(marca) || r.getLinea().equals(linea) || r.getCategoria().equals(genero);
 	}
-	public static Predicate<Row> queryAlmacen(String marca, String linea, String genero) {
-	    return r->r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
-	}
-	
+
 	public void actualizarProducto(Producto producto) {
 		repository.save(producto);
 		

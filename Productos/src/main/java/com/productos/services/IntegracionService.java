@@ -4,14 +4,12 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
 import com.productos.integracion.mahalo.AuthenticationSoapHeader;
 import com.productos.integracion.mahalo.CreacionProductoMasivo;
 import com.productos.integracion.mahalo.EncabezadoCreacionProductoMasivo;
-import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaAlmacen;
 import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedor;
 import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedorAlmacen;
 import com.productos.integracion.mahalo.ExternalService;
