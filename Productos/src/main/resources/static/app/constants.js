@@ -303,20 +303,51 @@ mainApp.constant('GENERAL_SERVICES', {
     					genero : "HOMBRE"
     				},
     				{
-    					id : "",
-    					nombre : "LOTTO" ,
-    					genero : "HOMBRE"
-    				},
-    				{
     					id : "MCO115241",
     					nombre : "JORDAN" ,
     					genero : "HOMBRE"
     				},
     				{
-    					id : "",
-    					nombre : "KAPPA" ,
+    					id : "MCO118085",
+    					nombre : "VANS" ,
     					genero : "HOMBRE"
     				},
+    				{
+    					id : "MCO18165",
+    					nombre : "CONVERSE" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO169047",
+    					nombre : "TOMMY HILFIGER" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO115244",
+    					nombre : "DC" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO172856",
+    					nombre : "OAKLEY" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO165922",
+    					nombre : "UNDER ARMOUR" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO115257",
+    					nombre : "RALPH LAUREN" ,
+    					genero : "HOMBRE"
+    				},
+    				{
+    					id : "MCO7441",
+    					nombre : "OTRAS MARCAS" ,
+    					genero : "HOMBRE"
+    				},
+    				
     				{
     					id : "MCO62611",
     					nombre : "ADIDAS",
@@ -348,20 +379,51 @@ mainApp.constant('GENERAL_SERVICES', {
     					genero : "MUJER"
     				},
     				{
-    					id : "",
-    					nombre : "LOTTO" ,
-    					genero : "MUJER"
-    				},
-    				{
     					id : "MCO115242",
     					nombre : "JORDAN" ,
     					genero : "MUJER"
     				},
     				{
-    					id : "",
-    					nombre : "KAPPA" ,
+    					id : "MCO118086",
+    					nombre : "VANS" ,
     					genero : "MUJER"
     				},
+    				{
+    					id : "MCO62612",
+    					nombre : "CONVERSE" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO169043",
+    					nombre : "TOMMY HILFIGER" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO115245",
+    					nombre : "DC" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO172854",
+    					nombre : "OAKLEY" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO165924",
+    					nombre : "UNDER ARMOUR" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO115258",
+    					nombre : "RALPH LAUREN" ,
+    					genero : "MUJER"
+    				},
+    				{
+    					id : "MCO62605",
+    					nombre : "OTRAS MARCAS" ,
+    					genero : "MUJER"
+    				},
+    				
     				{
     					id : "MCO62634",
     					nombre : "ADIDAS",
@@ -393,18 +455,48 @@ mainApp.constant('GENERAL_SERVICES', {
     					genero : "NIÑO"
     				},
     				{
-    					id : "",
-    					nombre : "LOTTO" ,
-    					genero : "NIÑO"
-    				},
-    				{
     					id : "MCO113404",
     					nombre : "JORDAN" ,
     					genero : "NIÑO"
     				},
     				{
-    					id : "",
-    					nombre : "KAPPA" ,
+    					id : "MCO118088",
+    					nombre : "VANS" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO62618",
+    					nombre : "CONVERSE" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO169045",
+    					nombre : "TOMMY HILFIGER" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO113367",
+    					nombre : "DC" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO172855",
+    					nombre : "OAKLEY" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO165928",
+    					nombre : "UNDER ARMOUR" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO115259",
+    					nombre : "RALPH LAUREN" ,
+    					genero : "NIÑO"
+    				},
+    				{
+    					id : "MCO62635",
+    					nombre : "OTRAS MARCAS" ,
     					genero : "NIÑO"
     				}
     				]
