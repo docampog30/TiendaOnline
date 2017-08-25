@@ -44,6 +44,9 @@ public class Producto {
 	
 	private String fecreacion;
 	
+	@DynamoDBAttribute
+	private String id;
+	
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -107,7 +110,12 @@ public class Producto {
 	public void setFecreacion(String fecreacion) {
 		this.fecreacion = fecreacion;
 	}
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getPreciocompra() {
 		return preciocompra;
 	}

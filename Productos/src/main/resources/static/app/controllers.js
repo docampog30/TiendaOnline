@@ -153,7 +153,7 @@ controllers
 		  	  }
 }]);
 
-controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance, $filter, GENERAL_SERVICES, meli, $location) {
+controllers.controller('ModalPublicarController',function($scope,$http, $uibModalInstance, $filter, GENERAL_SERVICES, meli, $location, Productos) {
 	
 	$scope.images = [];
 
@@ -235,7 +235,7 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		};
 	
 	$scope.adicionarVariacion = function(){
-		
+		productoMeli.variations = [];
 		$scope.productosAgregados.forEach(function (producto, index){
 			$scope.variationElement.attribute_combinations[0].value_id = producto.idtalla;
 			$scope.variationElement.attribute_combinations[0].value_name = producto.talla;
@@ -249,6 +249,11 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	$scope.publicar = function(){
 		$scope.productosAgregados;
 		var categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre':$scope.producto.marca,'genero': $scope.producto.genero}); 
+		
+		if (categoria.length == 0){
+			categoria = $filter('filter')(GENERAL_SERVICES.MARCAS, {'nombre': 'OTRAS MARCAS','genero': $scope.producto.genero});
+		}
+		
 		productoMeli.category_id = categoria[0].id;
 		productoMeli.title = $scope.producto.descripcion;
 		productoMeli.description = $scope.producto.descripcion;
@@ -257,10 +262,19 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		var hashParams = $location.hash();
 		var token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
 		meli.publicar(productoMeli, token).then(function (data){
+			
+			$scope.producto.id = data.id;
+			Productos.actualizar($scope.producto).then(function(data) {
+			  }, function(response) {
+			  });
+			
 			alert("Registro publicado correctamente");
+			
 		}, function (response) {
 			alert("Error publicando el producto");
 		});
+		
+		
 	}
 	
 	$scope.eliminarProducto = function(index){
