@@ -84,21 +84,22 @@ public class AmazonBD {
 		 return dbMapper.parallelScan(Producto.class,scanExpression,3);
 	}
 	
-	public List<Producto> selectProductHabilitados(){
 
-		 Map<String, AttributeValue> attributeValues = new HashMap<String, AttributeValue>();
-		    attributeValues.put(":habilita", new AttributeValue().withN("1"));
-		 
-		    Map<String, String> attributeNames = new HashMap<String, String>();
-		    attributeNames.put("#habilitado", "habilitado");
-		    
-		  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-		  scanExpression
-		  .withExpressionAttributeValues(attributeValues)
-		  .withExpressionAttributeNames(attributeNames)
-		  .withFilterExpression("#habilitado = :habilita");
-		  
-		 return dbMapper.parallelScan(Producto.class,scanExpression,2);
+	public List<Producto> selectProductByEstado(String estado) {
+
+	 	Map<String, AttributeValue> attributeValues = new HashMap<String, AttributeValue>();
+	    attributeValues.put(":estado", new AttributeValue().withS(estado));
+	 
+	    Map<String, String> attributeNames = new HashMap<String, String>();
+	    attributeNames.put("#estado", "estado");
+	    
+	  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+	  scanExpression
+	  .withExpressionAttributeValues(attributeValues)
+	  .withExpressionAttributeNames(attributeNames)
+	  .withFilterExpression("#estado = :estado");
+	  
+	 return dbMapper.parallelScan(Producto.class,scanExpression,2);
 	}
 
 }

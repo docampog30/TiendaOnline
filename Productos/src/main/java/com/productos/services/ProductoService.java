@@ -128,7 +128,7 @@ public class ProductoService {
 					producto.setTallas(tallas);
 					producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
 					Producto productBD = repository.geyByID(producto.getReferenciaProov());
-					producto.setHabilitado(productBD == null ? false :productBD.getHabilitado());
+					producto.setEstado(productBD == null ? null :productBD.getEstado());
 					producto.setPreciocompra(productBD == null ? null :productBD.getPreciocompra());
 					
 					if(producto.getDescripcion() == null){
@@ -154,19 +154,19 @@ public class ProductoService {
 	}
 	
 	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
-	    return r -> r.getMarca().equals(marca) || r.getLinea().equals(linea) || r.getCategoria().equals(genero);
+	    return r -> r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
 	}
 
 	public void actualizarProducto(Producto producto) {
 		repository.save(producto);
 		
-		List<String> list = FileUtil.readfile("mail.txt");
+//		List<String> list = FileUtil.readfile("mail.txt");
 		
-		if(producto.getPreciocompra() == null){
-			mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
-		}else{
-			mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
-		}
+//		if(producto.getPreciocompra() == null){
+//			mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
+//		}else{
+//			mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
+//		}
 	}
 	
 	private String getBodyMailProductosAsignados() {
@@ -177,7 +177,11 @@ public class ProductoService {
 		return " Hola \n Actualmente tienes referencias por asignar costos, por favor dirigirse al siguiente link \n\n 52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
 	}
 
-	public List<Producto> recuperarProductosHabilitados(){
-		return repository.selectProductHabilitados();
+	public void habilitarPaqueteProductos(List<Producto> productos) {
+		productos.forEach(repository::save);
+	}
+
+	public List<Producto> recuperarProductosPorEstado(String estado) {
+		return repository.selectProductByEstado(estado);
 	}
 }

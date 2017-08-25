@@ -42,10 +42,15 @@ public class ProductoController {
 	public void actualizar(@RequestBody Producto producto) {
 		productoService.actualizarProducto(producto);
 	}
-	
-	  @RequestMapping(method = RequestMethod.GET,value="habilitados")
-	  public List<Producto> findProductosHabilitados() {
-	    return productoService.recuperarProductosHabilitados();
+	  
+	  @RequestMapping(method = RequestMethod.GET,value="{estado}")
+	  public List<Producto> findProductosByState(@PathVariable String estado) {
+	    return productoService.recuperarProductosPorEstado(estado);
+	  }
+	  
+	  @RequestMapping(method = RequestMethod.PUT,value="habilitarPaquete")
+	  public void habilitarPaqueteProductos(@RequestBody List<Producto> productos) {
+	    productoService.habilitarPaqueteProductos(productos);
 	  }
   
 //  @RequestMapping(method = RequestMethod.GET)

@@ -126,12 +126,11 @@ controllers
 	  
 	  $scope.habilitarProductos = function () {
 		 var productosSeleccionados = $scope.productos.filter(function (p) {
-			  return p.habilitado;
+			 return p.estado == 'S';
 		  });
 		 
 		 angular.forEach(productosSeleccionados, function(value, key) {
-			 Productos.actualizar(value).then(function(data) {
-				 
+			 	Productos.actualizar(value).then(function(data) {
 			 });
 		 });
 	  }
@@ -342,22 +341,49 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 	
 }]);
 
-controllers.controller('PreciosController',['$scope', 'Productos',function($scope, Productos) {
+controllers.controller('PreciosController',['$scope', 'Productos','$location',function($scope, Productos,$location) {
 	
 	$scope.recuperar = function(){
-		Productos.recuperarHabilitados().then(function(data) {
+		console.log($location.path());
+		
+		if($location.path() == '/habilita')
+		{
+			Productos.recuperarProductosPorEstado('S').then(function(data) {
 			  $scope.productos = $scope.parseData(data.data);
+			}, function(response) {
+		    alert("Error consultando los productos");
+			});
+		}else{
+			$scope.recuperarConfirmados();
+		}
+	}
+	
+	$scope.recuperarConfirmados = function(){
+		Productos.recuperarProductosPorEstado('H').then(function(data) {
+			  $scope.productos = $scope.parseData(data.data);
+			}, function(response) {
+		    alert("Error consultando los productos");
+			});
+	}
+	
+	$scope.habilitarPaquete = function(){
+		angular.forEach($scope.productos,function(producto){
+			producto.estado='H';
+		});
+		Productos.habilitarPaqueteProductos($scope.productos).then(function(data) {
+			$scope.recuperarConfirmados();
+			alert("Productos habilitados correctamente");
 		  }, function(response) {
 		    alert("Error consultando los productos");
 		  });
 	}
 	
 	
-	
 	$scope.guardar = function(producto){
 		Productos.actualizar(producto).then(function(data) {
-			$scope.recuperar();
+			alert("Precio actualizado correctamente");
 		  }, function(response) {
+			$scope.recuperar();
 		    alert("Error consultando los productos");
 		  });
 	}

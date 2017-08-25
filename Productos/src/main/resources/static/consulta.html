@@ -8,7 +8,7 @@
       </div>
       
       <div class="alert alert-info" role="alert" ng-show="productos.length > 0">
-       <button type="button" class="btn btn-warning" ng-click = "habilitarProductos()">Habilitar productos</button>
+       <button type="button" class="btn btn-warning" ng-click = "habilitarProductos()">Seleccionar productos</button>
       </div>
      
       <div class="form-inline">
@@ -63,7 +63,7 @@
 		    <td>{{producto.precio}}<td>
 		    <td><button type="button" class="btn btn-info" ng-click = "openAlmacenes(producto)">Almacenes</button></td>	
 		    <td><button type="button" class="btn btn-primary" ng-click = "publicar(producto)">Publicar</button></td>
-		  	<td><input type="checkbox" ng-model="producto.habilitado"/></td>
+		  	<td><input type="checkbox" ng-model="producto.estado" ng-true-value="'S'">/></td>
 		  	
 		  </tr>
 		</table>

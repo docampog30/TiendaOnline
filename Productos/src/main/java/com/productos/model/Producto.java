@@ -30,7 +30,7 @@ public class Producto {
 	private String marca;
 	
 	@DynamoDBAttribute
-	private String habilitado;
+	private String estado;
 	
 	@DynamoDBAttribute
 	private String preciocompra;
@@ -93,11 +93,13 @@ public class Producto {
 	public void setReferenciaProov(String referenciaProov) {
 		this.referenciaProov = referenciaProov;
 	}
+	
 	@Override
 	public String toString() {
 		return "Producto [descripcion=" + descripcion + ", saldo=" + saldo + ", tallas=" + tallas + ", almacenes="
-				+ almacenes + ", linea=" + linea + ", genero=" + genero + ", marca=" + marca + ", referenciaProov="
-				+ referenciaProov + "]";
+				+ almacenes + ", linea=" + linea + ", genero=" + genero + ", marca=" + marca + ", estado=" + estado
+				+ ", preciocompra=" + preciocompra + ", precio=" + precio + ", referenciaProov=" + referenciaProov
+				+ ", fecreacion=" + fecreacion + "]";
 	}
 	public String getFecreacion() {
 		return fecreacion;
@@ -121,11 +123,10 @@ public class Producto {
 		this.precio = precio;
 	}
 	
-	public boolean getHabilitado() {
-		return "S".equals(habilitado) ? true : false;
+	public String getEstado() {
+		return estado;
 	}
-	
-	public void setHabilitado(boolean habilitado) {
-		this.habilitado = habilitado ? "S":"N";
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 }

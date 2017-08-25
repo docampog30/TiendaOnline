@@ -1,13 +1,18 @@
 mainApp.factory('Productos', ['$http', function($http) {
 	var dataFactory = {};
    	
-	dataFactory.recuperarHabilitados = function(){
-   	 	return $http.get('/productos/habilitados');
+	dataFactory.recuperarProductosPorEstado = function(estado){
+   	 	return $http.get('/productos/'+estado);
    	}
 	
 	dataFactory.actualizar = function(producto){
    	 	return $http.put('/productos',producto)
    	}
+	
+	dataFactory.habilitarPaqueteProductos = function(productos){
+   	 	return $http.put('/productos/habilitarPaquete',productos)
+   	}
+	
 	
 	dataFactory.buscarPorReferencia = function(referencia){
    	 	return $http.get('/productos/find/'+referencia)

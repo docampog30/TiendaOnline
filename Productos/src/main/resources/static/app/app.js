@@ -15,6 +15,10 @@ mainApp.config(['$routeProvider',
 	            templateUrl: 'precios.html',
 	            controller: 'PreciosController'
 	         }).
+	         when('/habilita', {
+		            templateUrl: 'habilitar.html',
+		            controller: 'PreciosController'
+		         }).
 	         when('/publicar', {
 		            templateUrl: 'publicar.html',
 		            controller: 'PublicarController'
