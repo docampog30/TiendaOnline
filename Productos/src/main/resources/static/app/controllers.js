@@ -115,14 +115,15 @@ controllers
 	  }
 	  
 	  $scope.set_color = function (producto) {
-		  if (producto.habilitado && producto.preciocompra == undefined) {
-			    return { background: "#da9686" }
-			  }
 		  
-		  if (producto.preciocompra != undefined) {
-		    return { background: "#86DA86" }
-		  }
+		if (producto.preciocompra != undefined) {
+			return { background: "#86DA86" }
+		}else if (producto.estado == 'S') {
+			return { background: "#da9686" }
+		}else if(producto.estado == 'H'){
+			return { background: "rgb(255, 249, 176)"}
 		}
+	}
 	  
 	  $scope.habilitarProductos = function () {
 		 var productosSeleccionados = $scope.productos.filter(function (p) {

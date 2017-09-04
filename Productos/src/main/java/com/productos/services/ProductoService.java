@@ -178,6 +178,8 @@ public class ProductoService {
 	}
 
 	public void habilitarPaqueteProductos(List<Producto> productos) {
+		List<String> list = FileUtil.readfile("mail.txt");
+		mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
 		productos.forEach(repository::save);
 	}
 
