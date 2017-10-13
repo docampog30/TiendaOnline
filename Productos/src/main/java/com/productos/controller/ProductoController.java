@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.productos.model.Paquete;
 import com.productos.model.Producto;
 import com.productos.services.ProductoService;
 
@@ -23,8 +24,8 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 	
-	@RequestMapping(method = RequestMethod.GET,value="/find/{linea}/{marca}/{genero}/{desde}/{hasta}")
-	public List<Producto> recuperarProductosxFiltro(@PathVariable String linea,@PathVariable String marca,@PathVariable String genero,@PathVariable Long desde,@PathVariable Long hasta,@RequestParam(name="almacen",required=false) String almacen) {
+	@RequestMapping(method = RequestMethod.GET,value="/find/{desde}/{hasta}")
+	public List<Producto> recuperarProductosxFiltro(@RequestParam(name="linea",required=false) String linea,@RequestParam(name="marca",required=false) String marca,@RequestParam(name="genero",required=false) String genero,@PathVariable Long desde,@PathVariable Long hasta,@RequestParam(name="almacen",required=false) String almacen) {
 		
 		LocalDate dateDesde = Instant.ofEpochMilli(desde).atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate dateHasta = Instant.ofEpochMilli(hasta).atZone(ZoneId.systemDefault()).toLocalDate();
@@ -51,6 +52,10 @@ public class ProductoController {
 	  @RequestMapping(method = RequestMethod.PUT,value="habilitarPaquete")
 	  public void habilitarPaqueteProductos(@RequestBody List<Producto> productos) {
 	    productoService.habilitarPaqueteProductos(productos);
+	  }
+	  @RequestMapping(method = RequestMethod.GET,value="/paquetes")
+	  public List<Paquete> getAllPaquetes() {
+	    return productoService.recuperarPaquetes();
 	  }
   
 //  @RequestMapping(method = RequestMethod.GET)

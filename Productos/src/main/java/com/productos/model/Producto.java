@@ -45,6 +45,9 @@ public class Producto {
 	private String fecreacion;
 	
 	@DynamoDBAttribute
+	private Integer consecutivo;
+	
+	@DynamoDBAttribute
 	private String id;
 	
 	public String getDescripcion() {
@@ -136,5 +139,13 @@ public class Producto {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public Integer getConsecutivo() {
+		return consecutivo;
+	}
+	
+	public void setConsecutivo(Integer consecutivo) {
+		this.consecutivo = consecutivo;
 	}
 }

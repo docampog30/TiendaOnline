@@ -1,6 +1,8 @@
 package com.productos.services;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.productos.bd.AmazonBD;
 import com.productos.integracion.mahalo.dto.Query;
 import com.productos.integracion.mahalo.dto.Row;
+import com.productos.model.Paquete;
 import com.productos.model.Producto;
 import com.productos.model.Talla;
 import com.productos.util.FileUtil;
@@ -63,10 +66,14 @@ public class ProductoService {
 	
 	public List<Producto> recuperarProductosxFiltro(String linea,String marca,LocalDate desde, LocalDate hasta,String almacen,String genero){
 		
+		Predicate<Row> compositePredicate =
+	            getAllPredicates(marca, linea, genero).stream()
+	                         .reduce(w -> true, Predicate::and);
+		
 		return integracionService.consultarCreacionProductoMasivo(desde,hasta).getSelect().getRows()
 					.parallelStream()
 					.distinct()
-					.filter(queryProductos(marca, linea, genero))
+					.filter(compositePredicate)
 					.map(this::buildProducto)
 					.map(p-> {
 						return this.buildSaldoProducto(p, almacen);
@@ -153,8 +160,11 @@ public class ProductoService {
 		return producto;
 	}
 	
-	public static Predicate<Row> queryProductos(String marca, String linea, String genero) {
-	    return r -> r.getMarca().equals(marca) && r.getLinea().equals(linea) && r.getCategoria().equals(genero);
+	public static List<Predicate<Row>> getAllPredicates(String marca, String linea, String genero){
+		 return Arrays.asList(
+				 r -> marca == null || marca.isEmpty() ? true : r.getMarca().equals(marca),
+				 r -> linea == null || linea.isEmpty() ? true : r.getLinea().equals(linea),
+				 r -> genero == null || genero.isEmpty() ? true :  r.getCategoria().equals(genero));
 	}
 
 	public void actualizarProducto(Producto producto) {
@@ -174,16 +184,33 @@ public class ProductoService {
 	}
 	
 	private String getBodyMailProductosPorAsignar() {
-		return " Hola \n Actualmente tienes referencias por asignar costos, por favor dirigirse al siguiente link \n\n 52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
+		return " Hola \n Actualmente tienes referencias por asignar costos, por favor dirigirse al siguiente link \n\n https://52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
 	}
 
 	public void habilitarPaqueteProductos(List<Producto> productos) {
+		
+		Integer consecutivo = repository.getMaxId();
+		
 		List<String> list = FileUtil.readfile("mail.txt");
-		mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
-		productos.forEach(repository::save);
+		//mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
+		
+		productos.forEach(p->{
+			p.setConsecutivo(consecutivo);
+			repository.save(p);
+		});
+		
+		Paquete paquete = new Paquete();
+		paquete.setConsecutivo(consecutivo);
+		paquete.setFecha(new Date());
+		
+		repository.save(paquete);
 	}
 
 	public List<Producto> recuperarProductosPorEstado(String estado) {
 		return repository.selectProductByEstado(estado);
+	}
+	
+	public List<Paquete> recuperarPaquetes() {
+		return repository.getPaquetes();
 	}
 }

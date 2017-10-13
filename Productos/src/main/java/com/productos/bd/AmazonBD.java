@@ -1,5 +1,6 @@
 package com.productos.bd;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,10 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedParallelScanList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.productos.model.Paquete;
 import com.productos.model.Producto;
 
 @Repository
@@ -25,7 +28,7 @@ public class AmazonBD {
 	@Autowired
 	private AmazonDynamoDB dynamoDB;
 	
-	public void save(Producto customer) {
+	public void save(Object customer) {
 		
 		try {
 			dbMapper.save(customer, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.CLOBBER));
@@ -100,6 +103,22 @@ public class AmazonBD {
 	  .withFilterExpression("#estado = :estado");
 	  
 	 return dbMapper.parallelScan(Producto.class,scanExpression,2);
+	}
+
+	public Integer getMaxId() {
+		  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+		  List<Paquete> parallelScan = dbMapper.parallelScan(Paquete.class,scanExpression,3);
+		  
+		  if(parallelScan.isEmpty()){
+			  return 1;
+		  }
+		  
+		  return parallelScan.stream().max((p1, p2) -> Integer.compare(p1.getConsecutivo(), p1.getConsecutivo())).get().getConsecutivo()+1;
+	}
+	
+	public List<Paquete> getPaquetes() {
+		  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+		  return dbMapper.parallelScan(Paquete.class,scanExpression,3);
 	}
 
 }

@@ -17,12 +17,16 @@ mainApp.factory('Productos', ['$http', function($http) {
 	dataFactory.buscarPorReferencia = function(referencia){
    	 	return $http.get('/productos/find/'+referencia)
    	}
+	
+	dataFactory.consultarPaquetes = function(){
+   	 	return $http.get('/productos/paquetes')
+   	}
    	
    	return dataFactory;
 }]);
 
 mainApp.factory('Detalles', ['$resource', function($resource) {
-	return $resource('/productos/find/:linea/:marca/:genero/:desde/:hasta',null,{
+	return $resource('/productos/find/:desde/:hasta',null,{
 		 query: {
 		      method: 'GET',
 		      isArray: true,

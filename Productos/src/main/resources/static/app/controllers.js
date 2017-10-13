@@ -3,7 +3,7 @@ controllers
 	  
 	  $scope.lineas = ["CALZADO","PRENDAS DE VESTIR","ACCESORIOS"];
 	  $scope.generos = ["","HOMBRE","DAMA","NINO","JUVENIL"];
-	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA","VANS","CONVERSE","TOMMY HILFIGER","DC","OAKLEY","UNDER ARMOUR"];
+	  $scope.marcas = ["","NIKE","ADIDAS","PUMA","NEW BALANCE","LEVIS","LACOSTE","LOTTO","JORDAN","KAPPA","VANS","CONVERSE","TOMMY HILFIGER","DC","OAKLEY","UNDER ARMOUR","BEVERLLY HILLS POLO",""];
 	  $scope.tiendas = [{codigo:"",nombre:''},
 		  				{codigo:"3",nombre:'PALACIO'},
 		  				{codigo:"4",nombre:'GIRARDOTA'},
@@ -16,11 +16,16 @@ controllers
 		  				{codigo:"13",nombre:'PREMIUM'},
 		  				{codigo:"14",nombre:'FLORIDA'}];
 	  
-	  $scope.search = {};
-	  $scope.lineaSelected = $scope.lineas[0];
-	  $scope.agregar = {};
-	  $scope.productosAgregados = [];
-	  $scope.tallasProducto = [];
+	  $scope.limpiar = function(){
+		  $scope.search = {};
+		  $scope.lineaSelected = $scope.lineas[0];
+		  $scope.agregar = {};
+		  $scope.productosAgregados = [];
+		  $scope.tallasProducto = [];
+		  $scope.productos = [];
+	  }
+	  
+	  $scope.limpiar();
 	  
 	  var token;
 	  
@@ -37,15 +42,21 @@ controllers
 	  
 	  $scope.consultarProductos = function(){
 		  
+		  if($scope.search.desde && $scope.search.hasta){
+		  
 		  var query = angular.copy($scope.search);
 		  query.desde = query.desde.getTime();
 		  query.hasta = query.hasta.getTime();
 		  
+		  
 		  var entries = Detalles.query(query).$promise.then(function(todo) {
 			   $scope.productos = todo;
 			}, function(errResponse) {
-				alert("No existe disponibilidad de producto seleccionado");
+				alert("No existe disponibilidad de(los) producto(s) seleccionado");
 			});
+		  }else{
+			  alert("Las fechas son obligatorias");
+		  }
 	  }
 	  
 	  $scope.consultarProductosReferencia = function(){
@@ -358,6 +369,8 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 
 controllers.controller('PreciosController',['$scope', 'Productos','$location',function($scope, Productos,$location) {
 	
+	$scope.search = {};
+	
 	$scope.recuperar = function(){
 		console.log($location.path());
 		
@@ -371,6 +384,13 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location',fu
 		}else{
 			$scope.recuperarConfirmados();
 		}
+		
+		Productos.consultarPaquetes().then(function(data) {
+			$scope.paquetes = data.data;
+			$scope.search.consecutivo = $scope.paquetes[0].consecutivo;
+		}, function(response) {
+		    alert("Error consultando los Consecuticos");
+		});
 	}
 	
 	$scope.recuperarConfirmados = function(){
@@ -381,12 +401,14 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location',fu
 			});
 	}
 	
+	$scope.recuperar();
+	
 	$scope.habilitarPaquete = function(){
 		angular.forEach($scope.productos,function(producto){
 			producto.estado='H';
 		});
 		Productos.habilitarPaqueteProductos($scope.productos).then(function(data) {
-			$scope.recuperarConfirmados();
+			$scope.recuperar();
 			alert("Productos habilitados correctamente");
 		  }, function(response) {
 		    alert("Error consultando los productos");
@@ -402,8 +424,6 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location',fu
 		    alert("Error consultando los productos");
 		  });
 	}
-	
-	$scope.recuperar();
 	
 	 $scope.parseData = function(data){
 		 angular.forEach(data, function(value, key) {
