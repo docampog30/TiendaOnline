@@ -9,12 +9,13 @@
 		
 		 <table class="table">
 		  <tr>
-			<th>DescripciÃ³n </th>
+			<th>Descripción </th>
 			<th>Referencia</th>
 		    <th>Linea </th>
 		    <th>Genero </th>
 		    <th>Marca </th>
 		    <th>Precio venta sportage</th>
+		    <th></th>
 		</tr>
 		  <tr ng-repeat="producto in productos">
 		    <td>{{producto.descripcion}}</td>
@@ -22,11 +23,68 @@
 		    <td>{{producto.linea}}</td>
 		    <td>{{producto.genero}}</td>
 		    <td>{{producto.marca}}</td>
-		     <td>{{producto.precio}}</td>
-		      <td>{{producto.habilitar}}</td>
+		    <td>{{producto.precio}}</td>
+		    <td>{{producto.habilitar}}</td>
+		    <td><button type="button" class="btn btn-info" ng-click = "publicar(producto)">Publicar</button></td>
 		  </tr>
 		</table>
 	</div>
 	
 	</div>
 	</form>
+
+	<script type="text/ng-template" id="myModalPublicar.html">
+   <div class="modal-header">
+            <h4 class="modal-title">Publicar producto</h4>
+			<p>Marca : {{producto.marca}} Genero : {{producto.genero}} Referencia : {{producto.referenciaProov}}</p>
+		 <div class="col-sm-10">
+			<input type="text" class="form-control" ng-model="producto.descripcion" placeholder="Nombre producto">
+			<span class="glyphicon glyphicon-edit form-control-feedback"></span>	
+          </div>
+   </div>
+<div class="modal-body">	
+	 <table class="table">
+		<tr>
+			 <td>
+				<label class="col-form-label">Precio</label>
+        		<input type="number" class="form-control" ng-model="agregar.precio" placeholder="Ingresar precio">
+			</td>
+			 <td>
+				<label class="col-form-label">Costo SNK</label>
+        		<label class="col-form-label">{{producto.preciocompra}}</label>
+			</td>
+			 <td>
+				<label class="col-form-label">Precio sportage</label>
+        		<label class="col-form-label">{{producto.precio}}</label>
+			</td>
+			<td>
+				<label class="col-form-label">    </label>
+				  <button type="submit" class="btn btn-warning pull-right" ng-click="agregarProducto()">Agregar</button>
+			</td>
+		</tr>
+	 </table>
+<div>
+	<label class="col-form-label">Productos listos para publicar</label>
+	 <table class="table">
+		  <tr>
+			<th>Talla</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+		</tr>
+		  <tr ng-repeat="prodTallas in tallasColombia track by $index">
+			<td>{{prodTallas.name}}</td>
+			<td>{{prodTallas.cantidad}}</td>
+			<td>{{agregar.precio}}</td>
+			<td><button type="button" class="btn btn btn-danger" ng-click = "eliminarProducto($index)">Eliminar
+				<span class="glyphicon glyphicon-erase"></span>	
+			</button></td>
+		  </tr>
+	</table>
+</div>
+        </div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-xs" ng-click="publicar()">Publicar
+        </button>
+        </div>
+</script>
+	

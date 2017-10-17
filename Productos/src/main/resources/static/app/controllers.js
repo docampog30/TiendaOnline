@@ -251,7 +251,7 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		$scope.productosAgregados.forEach(function (producto, index){
 			$scope.variationElement.attribute_combinations[0].value_id = producto.idtalla;
 			$scope.variationElement.attribute_combinations[0].value_name = producto.talla;
-			$scope.variationElement.price = producto.precio;
+			$scope.variationElement.price = agregar.precio;
 			$scope.variationElement.available_quantity = producto.cantidad;
 			$scope.variationElement.picture_ids = $scope.images;
 			productoMeli.variations.push(angular.copy($scope.variationElement));
@@ -367,7 +367,7 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 	
 }]);
 
-controllers.controller('PreciosController',['$scope', 'Productos','$location',function($scope, Productos,$location) {
+controllers.controller('PreciosController',['$scope', 'Productos','$location','$uibModal','GENERAL_SERVICES',function($scope, Productos,$location,$uibModal,GENERAL_SERVICES) {
 	
 	$scope.search = {};
 	
@@ -431,5 +431,61 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location',fu
 		 })
 		 return data;
 	 }
+	 
+	 $scope.homologarTallas = function (tallasMahalo){
+		  
+		  var tallaProducto = {
+						id : "",
+						name : "",
+						cantidad : ""
+					}
+		  
+		  tallasMahalo.forEach(function (tallaMahalo, index){
+			  
+				var talla = GENERAL_SERVICES.TALLAS.filter(function ( obj ) {
+				    return obj.mahalo === tallaMahalo.descripcion;
+				})[0];
+				
+				if (talla){
+					tallaProducto.id = talla.id;
+					tallaProducto.name = talla.name;
+					tallaProducto.cantidad = tallaMahalo.cantidad;
+					
+				}else{
+					tallaProducto.name = "error";
+				}
+				$scope.tallasColombia.push(angular.copy(tallaProducto));
+				
+			});
+	  }
+	 
+	 $scope.publicar = function (producto) {
+		  
+		  $scope.productosAgregados = [];
+		  $scope.agregar = {};
+		  $scope.producto ={};
+		  $scope.selectedItem = {};
+		  $scope.tallasColombia = [];
+		  
+		  $scope.producto = producto;
+		  $scope.selectedItem = $scope.producto.tallas[0];
+			   
+			   $scope.almacenes = producto.almacenes;
+			   $scope.homologarTallas($scope.producto.tallas);
+			    var modalInstance = $uibModal.open({
+			      ariaLabelledBy: 'modal-title',
+			      ariaDescribedBy: 'modal-body',
+			      templateUrl: 'myModalPublicar.html',//myModalPhotos.html
+			      size:'lg',
+			      controller: 'ModalPublicarController',
+			      scope:$scope
+			    });
+			    
+			    modalInstance.result.then(function (selectedItem) {
+			    	$scope.productosAgregados = selectedItem;
+			     }, function () {
+			        console.log('Modal dismissed at: ' + new Date());
+			     });
+	  }
 	
 }]);

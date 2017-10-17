@@ -17,7 +17,7 @@ public class Producto {
 	@DynamoDBIgnore
 	private Integer saldo;
 	
-	@DynamoDBIgnore
+	@DynamoDBAttribute
 	private List<Talla> tallas;
 	@DynamoDBIgnore
 	private List<String> almacenes;

@@ -74,7 +74,7 @@
  <script type="text/ng-template" id="myModalPublicar.html">
    <div class="modal-header">
             <h4 class="modal-title">Publicar producto</h4>
-			<p>Marca : {{producto.marca}} Genero : {{producto.genero}}</p>
+			<p>Marca : {{producto.marca}} Genero : {{producto.genero}} Referencia : {{producto.referenciaProov}}</p>
 		 <div class="col-sm-10">
 			<input type="text" class="form-control" ng-model="producto.descripcion" placeholder="Nombre producto">
 			<span class="glyphicon glyphicon-edit form-control-feedback"></span>	
@@ -102,7 +102,7 @@
         		<input type="number" class="form-control" ng-model="agregar.precio" placeholder="Ingresar precio">
 			</td>
 			 <td>
-				<label class="col-form-label">Precio asignado</label>
+				<label class="col-form-label">Costo SNK</label>
         		<label class="col-form-label">{{producto.preciocompra}}</label>
 			</td>
 			 <td>
