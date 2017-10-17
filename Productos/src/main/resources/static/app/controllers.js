@@ -389,8 +389,21 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 			$scope.paquetes = data.data;
 			$scope.search.consecutivo = $scope.paquetes[0].consecutivo;
 		}, function(response) {
-		    alert("Error consultando los Consecuticos");
+		    alert("Error consultando los Consecutivos");
 		});
+	}
+	
+	$scope.buscarDisponibles = function() {
+		$scope.recuperar();
+	}
+	
+	$scope.buscarXPaquete = function(){
+		Productos.recuperarProductosPorEstado('H').then(function(data) {
+			  $scope.productos = $scope.parseData(data.data).filter(number => number.consecutivo == $scope.search.consecutivo);
+			  
+			}, function(response) {
+		    alert("Error consultando los productos");
+			});
 	}
 	
 	$scope.recuperarConfirmados = function(){
