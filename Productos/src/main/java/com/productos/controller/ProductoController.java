@@ -53,6 +53,12 @@ public class ProductoController {
 	  public void habilitarPaqueteProductos(@RequestBody List<Producto> productos) {
 	    productoService.habilitarPaqueteProductos(productos);
 	  }
+	  
+	  @RequestMapping(method = RequestMethod.PUT,value="actualizarProductos")
+	  public void actualizarProductos(@RequestBody List<Producto> productos) {
+	    productoService.actualizarProductos(productos);
+	  }
+	  
 	  @RequestMapping(method = RequestMethod.GET,value="/paquetes")
 	  public List<Paquete> getAllPaquetes() {
 	    return productoService.recuperarPaquetes();

@@ -12,8 +12,9 @@ mainApp.factory('Productos', ['$http', function($http) {
 	dataFactory.habilitarPaqueteProductos = function(productos){
    	 	return $http.put('/productos/habilitarPaquete',productos)
    	}
-	
-	
+	dataFactory.actualizarPrecioProducto = function(productos){
+		return $http.put('/productos/actualizarProductos',productos)
+	}
 	dataFactory.buscarPorReferencia = function(referencia){
    	 	return $http.get('/productos/find/'+referencia)
    	}

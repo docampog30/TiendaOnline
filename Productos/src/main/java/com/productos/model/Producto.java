@@ -50,6 +50,9 @@ public class Producto {
 	@DynamoDBAttribute
 	private String id;
 	
+	@DynamoDBAttribute
+	private Integer unidades;
+	
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -147,5 +150,12 @@ public class Producto {
 	
 	public void setConsecutivo(Integer consecutivo) {
 		this.consecutivo = consecutivo;
+	}
+	
+	public Integer getUnidades() {
+		return unidades;
+	}
+	public void setUnidades(Integer unidades) {
+		this.unidades = unidades;
 	}
 }

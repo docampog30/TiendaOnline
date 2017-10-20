@@ -137,6 +137,7 @@ public class ProductoService {
 					Producto productBD = repository.geyByID(producto.getReferenciaProov());
 					producto.setEstado(productBD == null ? null :productBD.getEstado());
 					producto.setPreciocompra(productBD == null ? null :productBD.getPreciocompra());
+					producto.setUnidades(tallas.stream().mapToInt(Talla::getCantidad).sum());
 					
 					if(producto.getDescripcion() == null){
 						
@@ -147,7 +148,7 @@ public class ProductoService {
 						producto.setLinea(productBD == null ? null : productBD.getLinea());
 						producto.setReferenciaProov(row.getReferenciaprov());	
 						producto.setFecreacion(row.getFecreacion());
-						producto.setPrecio(row.getPrecio());
+						producto.setPrecio(productBD == null ? null : productBD.getPrecio());
 					}
 				}
 			}else{
@@ -169,18 +170,11 @@ public class ProductoService {
 
 	public void actualizarProducto(Producto producto) {
 		repository.save(producto);
-		
-//		List<String> list = FileUtil.readfile("mail.txt");
-		
-//		if(producto.getPreciocompra() == null){
-//			mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
-//		}else{
-//			mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
-//		}
+	
 	}
 	
 	private String getBodyMailProductosAsignados() {
-		return "Saludos \n Ya est√°n listos los costos. Por favor revisar";	
+		return "Saludos \nYa est·n listos los costos. Por favor revisar";	
 	}
 	
 	private String getBodyMailProductosPorAsignar() {
@@ -192,7 +186,7 @@ public class ProductoService {
 		Integer consecutivo = repository.getMaxId();
 		
 		List<String> list = FileUtil.readfile("mail.txt");
-		//mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
+		mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
 		
 		productos.forEach(p->{
 			p.setConsecutivo(consecutivo);
@@ -212,5 +206,12 @@ public class ProductoService {
 	
 	public List<Paquete> recuperarPaquetes() {
 		return repository.getPaquetes();
+	}
+
+	public void actualizarProductos(List<Producto> productos) {
+		
+		List<String> list = FileUtil.readfile("mail.txt");
+		mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
+		productos.forEach(this::actualizarProducto);
 	}
 }

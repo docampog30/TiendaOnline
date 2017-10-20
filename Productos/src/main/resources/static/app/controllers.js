@@ -430,12 +430,26 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 	
 	
 	$scope.guardar = function(producto){
-		Productos.actualizar(producto).then(function(data) {
+		
+		var packageProducts = $scope.productos.filter(number => number.consecutivo == $scope.search.consecutivo);
+		
+		
+		var badProducts = packageProducts.filter(
+				number =>(
+							number.preciocompra == undefined 
+							|| isNaN(number.preciocompra )));
+				
+		if(badProducts.length == 0){
+		
+		Productos.actualizarPrecioProducto(packageProducts).then(function(data) {
 			alert("Precio actualizado correctamente");
 		  }, function(response) {
 			$scope.recuperar();
 		    alert("Error consultando los productos");
 		  });
+		}else{
+			alert("Debe ingresar todos los precios");
+		}
 	}
 	
 	 $scope.parseData = function(data){
@@ -481,24 +495,34 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 		  $scope.tallasColombia = [];
 		  
 		  $scope.producto = producto;
-		  $scope.selectedItem = $scope.producto.tallas[0];
-			   
-			   $scope.almacenes = producto.almacenes;
-			   $scope.homologarTallas($scope.producto.tallas);
-			    var modalInstance = $uibModal.open({
-			      ariaLabelledBy: 'modal-title',
-			      ariaDescribedBy: 'modal-body',
-			      templateUrl: 'myModalPublicar.html',//myModalPhotos.html
-			      size:'lg',
-			      controller: 'ModalPublicarController',
-			      scope:$scope
-			    });
-			    
-			    modalInstance.result.then(function (selectedItem) {
-			    	$scope.productosAgregados = selectedItem;
-			     }, function () {
-			        console.log('Modal dismissed at: ' + new Date());
-			     });
-	  }
+
+		  Productos.buscarPorReferencia(producto.referenciaProov).then(function(todo) {
+				  $scope.producto = todo.data;
+				  
+				  $scope.selectedItem = $scope.producto.tallas[0];
+				   
+				   $scope.almacenes = producto.almacenes;
+				   $scope.homologarTallas($scope.producto.tallas);
+				    var modalInstance = $uibModal.open({
+				      ariaLabelledBy: 'modal-title',
+				      ariaDescribedBy: 'modal-body',
+				      templateUrl: 'myModalPublicar.html',
+				      size:'lg',
+				      controller: 'ModalPublicarController',
+				      scope:$scope
+				    });
+				    
+				    modalInstance.result.then(function (selectedItem) {
+				    	$scope.productosAgregados = selectedItem;
+				     }, function () {
+				        console.log('Modal dismissed at: ' + new Date());
+				     });
+				  
+				  
+				  
+				}, function(errResponse) {
+					alert("No existe disponibilidad de producto seleccionado");
+				});
+		  }
 	
 }]);
