@@ -249,13 +249,15 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 	
 	$scope.adicionarVariacion = function(){
 		productoMeli.variations = [];
-		$scope.productosAgregados.forEach(function (producto, index){
-			$scope.variationElement.attribute_combinations[0].value_id = producto.idtalla;
-			$scope.variationElement.attribute_combinations[0].value_name = producto.talla;
-			$scope.variationElement.price = agregar.precio;
-			$scope.variationElement.available_quantity = producto.cantidad;
-			$scope.variationElement.picture_ids = $scope.images;
-			productoMeli.variations.push(angular.copy($scope.variationElement));
+		$scope.tallasColombia.forEach(function (producto, index){
+			if (producto.name != "error"){
+				$scope.variationElement.attribute_combinations[0].value_id = producto.id;
+				$scope.variationElement.attribute_combinations[0].value_name = producto.name;
+				$scope.variationElement.price = $scope.agregar.precio;
+				$scope.variationElement.available_quantity = producto.cantidad;
+				$scope.variationElement.picture_ids = ["http://mla-s2-p.mlstatic.com/968521-MLA20805195516_072016-O.jpg"];
+				productoMeli.variations.push(angular.copy($scope.variationElement));
+			}
 		});
 	}
 	
@@ -288,10 +290,6 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 		});
 		
 		
-	}
-	
-	$scope.eliminarProducto = function(index){
-		$scope.productosAgregados.splice(index, 1);
 	}
 	
 });
@@ -368,9 +366,22 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 	
 }]);
 
-controllers.controller('PreciosController',['$scope', 'Productos','$location','$uibModal','GENERAL_SERVICES',function($scope, Productos,$location,$uibModal,GENERAL_SERVICES) {
+controllers.controller('PreciosController',['$scope', 'Productos','$location','$uibModal','GENERAL_SERVICES','$window',function($scope, Productos,$location,$uibModal,GENERAL_SERVICES,$window) {
 	
 	$scope.search = {};
+	
+	var token;
+	
+	$scope.validarToken = function(){
+		var hashParams = $location.hash();
+		token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
+		if (token === undefined || token === null || token === ""){
+			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
+		}
+		$scope.variaciones;
+	}
+	
+	$scope.validarToken();
 	
 	$scope.recuperar = function(){
 		console.log($location.path());
@@ -539,10 +550,13 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 				     });
 				  
 				  
-				  
 				}, function(errResponse) {
 					alert("No existe disponibilidad de producto seleccionado");
 				});
 		  }
+	 
+		$scope.eliminarProducto = function(index){
+			$scope.tallasColombia.splice(index, 1);
+		}
 	
 }]);
