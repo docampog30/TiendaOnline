@@ -27,19 +27,6 @@ controllers
 	  
 	  $scope.limpiar();
 	  
-	  var token;
-	  
-		$scope.validarToken = function(){
-			var hashParams = $location.hash();
-			token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
-			if (token === undefined || token === null || token === ""){
-				$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
-			}
-			$scope.variaciones;
-		}
-		
-		$scope.validarToken();
-	  
 	  $scope.consultarProductos = function(){
 		  
 		  if($scope.search.desde && $scope.search.hasta){
@@ -320,12 +307,14 @@ controllers.controller('PublicarController',['$scope', 'meli', '$window' , '$loc
 		};
 	
 	$scope.validarToken = function(){
+		if($location.path() == '/habilita'){
 		var hashParams = $location.hash();
 		token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
 		if (token === undefined || token === null || token === ""){
-			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID+"&redirect_uri=http://localhost:8080/#!/home";
+			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
 		}
 		$scope.variaciones;
+		}
 	}
 	
 	$scope.validarToken();
@@ -373,12 +362,14 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 	var token;
 	
 	$scope.validarToken = function(){
+		if($location.path() == '/habilita'){
 		var hashParams = $location.hash();
 		token = hashParams.substring(hashParams.lastIndexOf("#access_token=")+14,hashParams.lastIndexOf("&expires_in="));
 		if (token === undefined || token === null || token === ""){
 			$window.location.href = "https://auth.mercadolibre.com.co/authorization?response_type=token&client_id=" + GENERAL_SERVICES.APP_ID;
 		}
 		$scope.variaciones;
+		}
 	}
 	
 	$scope.validarToken();
