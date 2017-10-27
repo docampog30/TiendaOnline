@@ -127,12 +127,13 @@ controllers
 	  
 	  $scope.set_color = function (producto) {
 		  
-		if (producto.preciocompra != undefined) {
-			return { background: "#86DA86" }
-		}else if (producto.estado == 'S') {
+		if (producto.estado == 'S') {
 			return { background: "#da9686" }
-		}else if(producto.estado == 'H'){
-			return { background: "rgb(255, 249, 176)"}
+		}else if (producto.estado == 'H') {
+			return { background: "rgb(255, 249, 176)" }
+		}
+		if(producto.id != undefined){
+			return { background: "#54C86A"}
 		}
 	}
 	  
@@ -429,23 +430,29 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 	}
 	
 	
-	$scope.guardar = function(producto){
+	$scope.guardar = function(){
 		
 		var packageProducts = $scope.productos.filter(number => number.consecutivo == $scope.search.consecutivo);
 		
 		
 		var badProducts = packageProducts.filter(
 				number =>(
-							number.preciocompra == undefined 
-							|| isNaN(number.preciocompra )));
+							number.precioPantalla == undefined 
+							|| isNaN(number.precioPantalla )));
 				
 		if(badProducts.length == 0){
 		
+		 angular.forEach(packageProducts, function(value, key) {
+		 	value.preciocompra = parseInt(value.precioPantalla);
+		 	delete value.precioPantalla;
+		 })
+		 
 		Productos.actualizarPrecioProducto(packageProducts).then(function(data) {
 			alert("Precio actualizado correctamente");
-		  }, function(response) {
 			$scope.recuperar();
+		  }, function(response) {
 		    alert("Error consultando los productos");
+		    $scope.recuperar();
 		  });
 		}else{
 			alert("Debe ingresar todos los precios");
@@ -455,6 +462,7 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 	 $scope.parseData = function(data){
 		 angular.forEach(data, function(value, key) {
 		 	value.preciocompra = parseInt(value.preciocompra);
+		 	value.precioPantalla = parseInt(value.preciocompra);
 		 })
 		 return data;
 	 }
@@ -484,6 +492,18 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 				$scope.tallasColombia.push(angular.copy(tallaProducto));
 				
 			});
+	  }
+	  
+	  $scope.descartar= function (producto) {
+	  	producto.estado = "";
+	  	producto.preciocompra = null;
+	  	Productos.actualizar(producto).then(function(data) {
+			alert("Producto descartado correctamente");
+			$scope.recuperar();
+		  }, function(response) {
+		   alert("Error descartando producto");
+		    $scope.recuperar();
+		  });
 	  }
 	 
 	 $scope.publicar = function (producto) {

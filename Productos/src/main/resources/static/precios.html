@@ -15,7 +15,7 @@
 
 		 <div class="panel-heading">
 		 <label>Productos disponibles para gestionar</label>
-		 <button type="button" class="btn btn-info pull-right" ng-click = "guardar(producto)">Guardar</button>
+		 <button type="button" class="btn btn-info pull-right" ng-click = "guardar()">Guardar</button>
 		 </div>
 		 <table class="table">
 		  <tr>
@@ -34,8 +34,8 @@
 		    <td>{{producto.genero}}</td>
 		    <td>{{producto.marca}}</td>
 		     <td>{{producto.precio}}</td>
-		    <td><input type="number" ng-model="producto.preciocompra"/><td>
-		    <td>{{producto.preciocompra | number:0}}</td>
+		    <td><input ng-disabled="producto.preciocompra > 0" type="number" ng-model="producto.precioPantalla"/><td>
+		    <td>{{producto.precioPantalla | number:0}}</td>
 		  	
 		  </tr>
 		</table>

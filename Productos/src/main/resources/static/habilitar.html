@@ -25,6 +25,8 @@
 		    <th>Marca </th>
 		    <th>Precio venta sportage</th>
 		    <th></th>
+		    <th></th>
+		    <th></th>
 		</tr>
 		  <tr ng-repeat="producto in productos">
 		    <td>{{producto.descripcion}}</td>
@@ -33,7 +35,7 @@
 		    <td>{{producto.genero}}</td>
 		    <td>{{producto.marca}}</td>
 		    <td>{{producto.precio}}</td>
-		    <td>{{producto.habilitar}}</td>
+		    <td><button  type="button" class="btn btn-danger" ng-click = "descartar(producto)">Descartar</button></td>
 		    <td><input ng-show="producto.estado == 'S'"  type="checkbox" ng-model="producto.estado" ng-true-value="'S'"/></td>
 		    <td><button ng-show="producto.estado == 'H'" type="button" class="btn btn-info" ng-click = "publicar(producto)">Publicar</button></td>
 		  </tr>
@@ -61,11 +63,11 @@
 			</td>
 			 <td>
 				<label class="col-form-label">Costo SNK</label>
-        		<label class="col-form-label">{{producto.preciocompra}}</label>
+        		<label class="form-control">{{producto.preciocompra|currency}}</label>
 			</td>
 			 <td>
 				<label class="col-form-label">Precio sportage</label>
-        		<label class="col-form-label">{{producto.precio}}</label>
+        		<label class="form-control">{{producto.precio|currency}}</label>
 			</td>
 			<td>
 				<label class="col-form-label">    </label>
