@@ -209,7 +209,7 @@ controllers.controller('ModalPublicarController',function($scope,$http, $uibModa
 			listing_type_id : "bronze",
 			condition : "new",
 			description : "",
-			warranty : "2 meses",
+			warranty : GENERAL_SERVICES.TEXTO_GARANTIA,
 			variations : []
 	}
 	

@@ -36,25 +36,30 @@ mainApp.constant('GENERAL_SERVICES', {
 			      },
 			      {
 			        "id": "8f932b5",
-			        "name": "24"
+			        "name": "24",
+			        "mahaloMujer" : "8"
 			      },
 			      {
 			        "id": "103000-8e296a",
-			        "name": "25"
+			        "name": "25",
+			        "mahaloMujer" : "10"
 			      },
 			      {
 			        "id": "500af3c",
-			        "name": "26"
+			        "name": "26",
+			        "mahaloMujer" : "12"
 			      },
 			      {
 			        "id": "103000-2e74f1",
 			        "name": "27",
-			        "mahalo": "37"
+			        "mahalo": "37",
+			        "mahaloMujer" : "74"
 			      },
 			      {
 			        "id": "103000-b9c87c",
 			        "name": "27.5",
-			        "mahalo": "38"
+			        "mahalo": "38",
+			        "mahaloMujer" : "81"
 			      },
 			      {
 			        "id": "8a3aff3",
@@ -499,5 +504,7 @@ mainApp.constant('GENERAL_SERVICES', {
     					nombre : "OTRAS MARCAS" ,
     					genero : "NIÑO"
     				}
-    				]
-	});
+    				],
+
+		'TEXTO_GARANTIA' : 'Los productos de calzado, prendas de vestir y accesorios comercializados por SNK tendrán una garantía de cuarenta y cinco (45) días calendario o la ofrecida por el productor'
+});
