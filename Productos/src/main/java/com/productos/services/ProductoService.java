@@ -3,9 +3,11 @@ package com.productos.services;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -34,20 +36,36 @@ public class ProductoService {
 	@Autowired
 	private MailService mailService;
 	
+	private static Map<String,String> almacenes = new HashMap<>();
+	
+	static {
+		
+		almacenes.put("3", "PALACIO");
+		almacenes.put("4", "GIRARDOTA");
+		almacenes.put("5", "SAN DIEGO");
+		almacenes.put("8", "HOLLYWOOD");
+		almacenes.put("9", "MAYORCA");
+		almacenes.put("10", "PUERTA NORTE");
+		almacenes.put("11", "IBAGUE");
+		almacenes.put("12", "MOLINOS");
+		almacenes.put("13", "PREMIUM");
+		almacenes.put("14", "FLORIDA");
+	}
+	
 	public void guardarProductosProcess(){
 		
-		Query query = integracionService.consultarCreacionProductoMasivo();
-		
-		System.out.println("# Productos recuperados -> "+query.getSelect().getRows().size());
-		
-		query.getSelect().getRows().stream()
-				.distinct()
-				.filter(Objects::nonNull)
-				.map(this::buildProducto)
-				.filter(Objects::nonNull)
-				.forEach(p->{
-					repository.save(p);
-				});
+//		Query query = integracionService.consultarCreacionProductoMasivo();
+//		
+//		System.out.println("# Productos recuperados -> "+query.getSelect().getRows().size());
+//		
+//		query.getSelect().getRows().stream()
+//				.distinct()
+//				.filter(Objects::nonNull)
+//				.map(this::buildProducto)
+//				.filter(Objects::nonNull)
+//				.forEach(p->{
+//					repository.save(p);
+//				});
 	}
 	
 	public void guardarProductosDiarios(){
@@ -92,10 +110,25 @@ public class ProductoService {
 		
 		Producto producto = new Producto();
 		producto.setReferenciaProov(referencia);
-		
-		return buildSaldoProducto (producto,null);
+		producto = buildSaldoProducto (producto,null);
+		buildDetails(producto);
+		return producto;
 	}
 	
+	private void buildDetails(Producto producto) {
+		
+		Query detallesXSKU = integracionService.consultarDetallesXSKU(producto.getSku());
+		
+		if(detallesXSKU != null && detallesXSKU.getSelect() != null && !detallesXSKU.getSelect().getRows().isEmpty()) {
+			Row row = detallesXSKU.getSelect().getRows().get(0);
+			producto.setMarca(row.getMarca());
+			producto.setGenero(row.getCategoria());
+			producto.setLinea(row.getLinea());
+			producto.setPrecio(row.getPrecio());
+		}
+
+	}
+
 	public Producto buildProducto(Row row){
 		
 		Producto producto = new Producto();
@@ -131,9 +164,17 @@ public class ProductoService {
 				if(tallas.isEmpty() || count <=6){
 					producto = null;
 				}else{
-					Set<String> distinctCompany = rows.stream().map(Row::getAlmacen).collect(Collectors.toCollection(HashSet::new));
+					
+					Map<String, Integer> almacenes = rows.stream().collect(Collectors.groupingBy(Row::getAlmacen, Collectors.summingInt(Row::getSaldo)));
+					List<String> company = almacenes.entrySet().stream().map(k-> this.getAlmacenesFromMap(k)).collect(Collectors.toList());
+//					 almacenes.entrySet().stream().map((k,v)-> k.).collect(Collectors.toList());
+					
+					
+					
+					
+					
 					producto.setTallas(tallas);
-					producto.setAlmacenes(distinctCompany.stream().collect(Collectors.toList()));
+					producto.setAlmacenes(company);
 					Producto productBD = repository.geyByID(producto.getReferenciaProov());
 					producto.setEstado(productBD == null ? null :productBD.getEstado());
 					producto.setPreciocompra(productBD == null ? null :productBD.getPreciocompra());
@@ -142,6 +183,7 @@ public class ProductoService {
 					if(producto.getDescripcion() == null){
 						
 						Row row = querySaldoxReferencia.getSelect().getRows().get(0);
+						producto.setSku(row.getSku());
 						producto.setDescripcion(row.getDescripcion());
 						producto.setMarca(productBD == null ? null : productBD.getMarca());
 						producto.setGenero(productBD == null ? null : productBD.getGenero());
@@ -161,6 +203,10 @@ public class ProductoService {
 		return producto;
 	}
 	
+	private String getAlmacenesFromMap(Entry<String, Integer> k) {
+		return almacenes.get(k.getKey()).concat(" - ").concat(k.getValue().toString());
+	}
+
 	public static List<Predicate<Row>> getAllPredicates(String marca, String linea, String genero){
 		 return Arrays.asList(
 				 r -> marca == null || marca.isEmpty() ? true : r.getMarca().equals(marca),
@@ -174,7 +220,7 @@ public class ProductoService {
 	}
 	
 	private String getBodyMailProductosAsignados() {
-		return "Saludos \nYa están listos los costos. Por favor revisar";	
+		return "Saludos \nYa estï¿½n listos los costos. Por favor revisar";	
 	}
 	
 	private String getBodyMailProductosPorAsignar() {

@@ -53,6 +53,8 @@ public class Producto {
 	@DynamoDBAttribute
 	private Integer unidades;
 	
+	private String sku;
+	
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -157,5 +159,11 @@ public class Producto {
 	}
 	public void setUnidades(Integer unidades) {
 		this.unidades = unidades;
+	}
+	public String getSku() {
+		return sku;
+	}
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 }

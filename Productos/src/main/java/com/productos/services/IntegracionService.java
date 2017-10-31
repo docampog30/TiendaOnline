@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.productos.integracion.mahalo.AuthenticationSoapHeader;
 import com.productos.integracion.mahalo.CreacionProductoMasivo;
 import com.productos.integracion.mahalo.EncabezadoCreacionProductoMasivo;
+import com.productos.integracion.mahalo.EncabezadoProductoxSku;
 import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedor;
 import com.productos.integracion.mahalo.EncabezadoSaldoxReferenciaProveedorAlmacen;
 import com.productos.integracion.mahalo.ExternalService;
 import com.productos.integracion.mahalo.ObjectFactory;
+import com.productos.integracion.mahalo.ProductoxSku;
 import com.productos.integracion.mahalo.SaldoxReferenciaProveedor;
 import com.productos.integracion.mahalo.SaldoxReferenciaProveedorAlmacen;
 import com.productos.integracion.mahalo.TicketResponse;
@@ -69,14 +71,6 @@ public class IntegracionService {
 		
 
 		return getQuery(datos);
-	}
-	
-	public Query consultarCreacionProductoMasivo(){
-		
-		LocalDate since = DateUtil.StringToLocalDate("01/06/2016", DateUtil.DATE_FORMATTER);
-		LocalDate now = LocalDate.now();
-		
-		return consultarCreacionProductoMasivo(since,now);
 	}
 	
 	public Query consultarDetallexReferencia(String referencia){
@@ -170,6 +164,31 @@ public class IntegracionService {
 		
 		
 		return data;
+	}
+
+	public Query consultarDetallesXSKU(String sku) {
+		String datos = null;
+		ProductoxSku productoSKU = FACTORY.createProductoxSku();
+		
+		EncabezadoProductoxSku enProdSKU = FACTORY.createEncabezadoProductoxSku();
+		enProdSKU.setSku(sku);
+		
+		productoSKU.setAuthentication(AUTHENTICATION);
+		productoSKU.setEncabezadoProductoxSku(enProdSKU);
+		
+		try {
+			ExternalService service = new ExternalService(url);
+			System.out.println("Consultando getInfoProductoxSku ::::");
+			TicketResponse resultadoWS = service.getExternalServiceSoap().getInfoProductoxSku(productoSKU);
+			datos = resultadoWS.getResultadoTicket().getDatos();
+			System.out.println("Termina getInfoProductoxSku ::::");
+		} catch (Exception e) {
+			System.err.println("Error en getInfoProductoxSku "+e.getMessage());
+		}
+		
+
+		return getQuery(datos);
+		
 	}
 	
 }
