@@ -50,6 +50,7 @@ public class ProductoService {
 		almacenes.put("12", "MOLINOS");
 		almacenes.put("13", "PREMIUM");
 		almacenes.put("14", "FLORIDA");
+		almacenes.put("18", "SANTA FE");
 	}
 	
 	public void guardarProductosProcess(){

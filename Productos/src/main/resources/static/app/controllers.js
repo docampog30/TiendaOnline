@@ -14,7 +14,9 @@ controllers
 		  				{codigo:"11",nombre:'IBAGUE'},
 		  				{codigo:"12",nombre:'MOLINOS'},
 		  				{codigo:"13",nombre:'PREMIUM'},
-		  				{codigo:"14",nombre:'FLORIDA'}];
+		  				{codigo:"14",nombre:'FLORIDA'},
+		  				{codigo:"18",nombre:'SANTA FE'}
+		  				];
 	  
 	  $scope.limpiar = function(){
 		  $scope.search = {};
