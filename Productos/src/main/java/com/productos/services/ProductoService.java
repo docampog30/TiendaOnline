@@ -171,10 +171,6 @@ public class ProductoService {
 					List<String> company = almacenes.entrySet().stream().map(k-> this.getAlmacenesFromMap(k)).collect(Collectors.toList());
 //					 almacenes.entrySet().stream().map((k,v)-> k.).collect(Collectors.toList());
 					
-					
-					
-					
-					
 					producto.setTallas(tallas);
 					producto.setAlmacenes(company);
 					Producto productBD = repository.geyByID(producto.getReferenciaProov());

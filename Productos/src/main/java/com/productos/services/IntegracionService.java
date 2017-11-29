@@ -29,8 +29,8 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 @Service
 public class IntegracionService {
 	
-	private static final String PASSWORD = "sgc01511";
-	private static final String USER = "01511sgc";
+	private static final String PASSWORD = "01511sgc";
+	private static final String USER = "sgc01511";
 	private static final ObjectFactory FACTORY = new ObjectFactory();
 	private static AuthenticationSoapHeader AUTHENTICATION = null;
 	private static URL url = null;
