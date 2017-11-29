@@ -16,7 +16,9 @@ controllers
 		  				{codigo:"13",nombre:'PREMIUM'},
 		  				{codigo:"14",nombre:'FLORIDA'},
 		  				{codigo:"15",nombre:'TRANSITO'},
-		  				{codigo:"16",nombre:'VIRTUAL'}];
+		  				{codigo:"16",nombre:'VIRTUAL'},
+		  				{codigo:"18",nombre:'SANTA FE'}
+		  				];
 	  
 	  $scope.limpiar = function(){
 		  $scope.search = {};

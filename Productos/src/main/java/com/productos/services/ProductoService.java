@@ -51,6 +51,7 @@ public class ProductoService {
 		almacenes.put("15", "WEB");
 		almacenes.put("16", "FACTURACION");
 		almacenes.put("100", "VIRTUAL");
+		almacenes.put("18", "SANTA FE");
 	}
 	
 	public void guardarProductosProcess(){
