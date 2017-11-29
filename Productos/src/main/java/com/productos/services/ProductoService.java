@@ -4,12 +4,10 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -50,6 +48,9 @@ public class ProductoService {
 		almacenes.put("12", "MOLINOS");
 		almacenes.put("13", "PREMIUM");
 		almacenes.put("14", "FLORIDA");
+		almacenes.put("15", "WEB");
+		almacenes.put("16", "FACTURACION");
+		almacenes.put("100", "VIRTUAL");
 	}
 	
 	public void guardarProductosProcess(){
@@ -215,16 +216,13 @@ public class ProductoService {
 	}
 
 	public void actualizarProducto(Producto producto) {
+		Producto producto2 = repository.geyByID(producto.getReferenciaProov());
+		
+		if(producto2.getId() == null && producto.getId() != null) {
+			List<String> list = FileUtil.readfile("mail.txt");
+			mailService.send(list.get(2),"Producto Publicado",getBodyMailProductoPublicado(producto));
+		}
 		repository.save(producto);
-	
-	}
-	
-	private String getBodyMailProductosAsignados() {
-		return "Saludos \nYa est�n listos los costos. Por favor revisar";	
-	}
-	
-	private String getBodyMailProductosPorAsignar() {
-		return " Hola \n Actualmente tienes referencias por asignar costos, por favor dirigirse al siguiente link \n\n https://52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
 	}
 
 	public void habilitarPaqueteProductos(List<Producto> productos) {
@@ -232,7 +230,7 @@ public class ProductoService {
 		Integer consecutivo = repository.getMaxId();
 		
 		List<String> list = FileUtil.readfile("mail.txt");
-		mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar());
+		mailService.send(list.get(0),"Precio productos por asignar",getBodyMailProductosPorAsignar(consecutivo));
 		
 		productos.forEach(p->{
 			p.setConsecutivo(consecutivo);
@@ -257,7 +255,32 @@ public class ProductoService {
 	public void actualizarProductos(List<Producto> productos) {
 		
 		List<String> list = FileUtil.readfile("mail.txt");
-		mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados());
 		productos.forEach(this::actualizarProducto);
+		
+		mailService.send(list.get(1),"Precio productos asignados",getBodyMailProductosAsignados(productos));
+	}
+	
+	private static String getBodyMailProductoPublicado(Producto producto) {
+		StringBuilder sb = new StringBuilder("Saludos, \n Se publicó a MercaShops el producto : \n");
+		sb.append(producto.getReferenciaProov());
+		sb.append(" ");
+		sb.append(producto.getDescripcion());
+		return sb.toString();
+	}
+
+	static String getBodyMailProductosAsignados(List<Producto> productos) {
+		StringBuilder sb = new StringBuilder("Saludos, \nYa están listos los costos. Por favor revisar");
+		sb.append("\n\n");
+		productos.forEach(p-> {
+			sb.append(p.getReferenciaProov());
+			sb.append(" -> ");
+			sb.append(p.getPreciocompra());
+			sb.append("\n");
+		});
+		return sb.toString();	
+	}
+	
+	private static String getBodyMailProductosPorAsignar(Integer consecutivo) {
+		return " Hola \n Actualmente tienes referencias por asignar costos del paquete # "+consecutivo+" , por favor dirigirse al siguiente link \n\n https://52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
 	}
 }

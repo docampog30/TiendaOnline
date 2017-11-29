@@ -113,7 +113,7 @@ public class AmazonBD {
 			  return 1;
 		  }
 		  
-		  return parallelScan.stream().max((p1, p2) -> Integer.compare(p1.getConsecutivo(), p1.getConsecutivo())).get().getConsecutivo()+1;
+		  return parallelScan.stream().max((p1, p2) -> Integer.compare(p1.getConsecutivo(), p2.getConsecutivo())).get().getConsecutivo()+1;
 	}
 	
 	public List<Paquete> getPaquetes() {

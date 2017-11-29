@@ -36,7 +36,7 @@
 		    <td>{{producto.marca}}</td>
 		    <td>{{producto.precio}}</td>
 		    <td><button  type="button" class="btn btn-danger" ng-click = "descartar(producto)">Descartar</button></td>
-		    <td><input ng-show="producto.estado == 'S'"  type="checkbox" ng-model="producto.estado" ng-true-value="'S'"/></td>
+		    <td><input   type="checkbox" ng-model="producto.estado" ng-true-value="'S'"/></td>
 		    <td><button ng-show="producto.estado == 'H'" type="button" class="btn btn-info" ng-click = "publicar(producto)">Publicar</button></td>
 		  </tr>
 		</table>

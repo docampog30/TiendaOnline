@@ -14,7 +14,9 @@ controllers
 		  				{codigo:"11",nombre:'IBAGUE'},
 		  				{codigo:"12",nombre:'MOLINOS'},
 		  				{codigo:"13",nombre:'PREMIUM'},
-		  				{codigo:"14",nombre:'FLORIDA'}];
+		  				{codigo:"14",nombre:'FLORIDA'},
+		  				{codigo:"15",nombre:'TRANSITO'},
+		  				{codigo:"16",nombre:'VIRTUAL'}];
 	  
 	  $scope.limpiar = function(){
 		  $scope.search = {};
@@ -420,10 +422,14 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 	$scope.recuperar();
 	
 	$scope.habilitarPaquete = function(){
-		angular.forEach($scope.productos,function(producto){
-			producto.estado='H';
-		});
-		Productos.habilitarPaqueteProductos($scope.productos).then(function(data) {
+		
+		var selectedProducts = $scope.productos.filter(producto => producto.estado == 'S');
+		
+		angular.forEach(selectedProducts, function(value, key) {
+			value.estado = 'H';
+		 });
+		 
+		Productos.habilitarPaqueteProductos(selectedProducts).then(function(data) {
 			$scope.recuperar();
 			alert("Productos habilitados correctamente");
 		  }, function(response) {
@@ -447,7 +453,7 @@ controllers.controller('PreciosController',['$scope', 'Productos','$location','$
 		 angular.forEach(packageProducts, function(value, key) {
 		 	value.preciocompra = parseInt(value.precioPantalla);
 		 	delete value.precioPantalla;
-		 })
+		 });
 		 
 		Productos.actualizarPrecioProducto(packageProducts).then(function(data) {
 			alert("Precio actualizado correctamente");
