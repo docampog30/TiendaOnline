@@ -38,6 +38,10 @@ public class ProductoController {
 		return productoService.getDetailsByID(ref);
 	}
 	
+	@RequestMapping(method = RequestMethod.GET,value="/find/published")
+	public List<Producto> buscarProductosPublicados() {
+		return productoService.getProductosPublicados();
+	}
 	
 	@RequestMapping(method = RequestMethod.PUT)
 	public void actualizar(@RequestBody Producto producto) {

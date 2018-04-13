@@ -215,10 +215,14 @@ public class ProductoService {
 	public void actualizarProducto(Producto producto) {
 		Producto producto2 = repository.geyByID(producto.getReferenciaProov());
 		
-		if(producto2.getId() == null && producto.getId() != null) {
-			List<String> list = FileUtil.readfile("mail.txt");
-			mailService.send(list.get(2),"Producto Publicado",getBodyMailProductoPublicado(producto));
+		if(producto2 != null){
+			if(producto2.getId() == null && producto.getId() != null) {
+				List<String> list = FileUtil.readfile("mail.txt");
+				mailService.send(list.get(2),"Producto Publicado",getBodyMailProductoPublicado(producto));
+			}
 		}
+		
+		
 		repository.save(producto);
 	}
 
@@ -279,5 +283,9 @@ public class ProductoService {
 	
 	private static String getBodyMailProductosPorAsignar(Integer consecutivo) {
 		return " Hola \n Actualmente tienes referencias por asignar costos del paquete # "+consecutivo+" , por favor dirigirse al siguiente link \n\n https://52.1.235.127:8090/index.html#!/precios \n\n Muchas gracias \n\n DEPARTAMENTO DE COMPRAS \n SNK.";
+	}
+
+	public List<Producto> getProductosPublicados() {
+		return repository.selectProductosPublicados();
 	}
 }

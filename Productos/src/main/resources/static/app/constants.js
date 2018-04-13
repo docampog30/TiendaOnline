@@ -428,7 +428,81 @@ mainApp.constant('GENERAL_SERVICES', {
     					nombre : "OTRAS MARCAS" ,
     					genero : "MUJER"
     				},
-    				
+    				{
+    					id : "MCO62611",
+    					nombre : "ADIDAS",
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO62614",
+    					nombre : "NIKE" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO62633",
+    					nombre : "PUMA" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO62600",
+    					nombre : "NEW BALANCE",
+    					genero : "DAMA" 
+    				},
+    				{
+    					id : "MCO172838",
+    					nombre : "LEVIS" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO79567",
+    					nombre : "LACOSTE" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO115242",
+    					nombre : "JORDAN" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO118086",
+    					nombre : "VANS" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO62612",
+    					nombre : "CONVERSE" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO169043",
+    					nombre : "TOMMY HILFIGER" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO115245",
+    					nombre : "DC" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO172854",
+    					nombre : "OAKLEY" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO165924",
+    					nombre : "UNDER ARMOUR" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO115258",
+    					nombre : "RALPH LAUREN" ,
+    					genero : "DAMA"
+    				},
+    				{
+    					id : "MCO62605",
+    					nombre : "OTRAS MARCAS" ,
+    					genero : "DAMA"
+    				},
     				{
     					id : "MCO62634",
     					nombre : "ADIDAS",

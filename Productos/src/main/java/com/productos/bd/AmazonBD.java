@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -119,6 +120,15 @@ public class AmazonBD {
 	public List<Paquete> getPaquetes() {
 		  DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
 		  return dbMapper.parallelScan(Paquete.class,scanExpression,3);
+	}
+
+	public List<Producto> selectProductosPublicados() {
+		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+		List<Producto> parallelScan = dbMapper.parallelScan(Producto.class,scanExpression,3);
+		return parallelScan
+				.parallelStream()
+					.filter(p -> p.getId() != null)
+						.collect(Collectors.toList());
 	}
 
 }
